@@ -38,21 +38,21 @@
 		52D6217C14DF7F1E00400117 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		52D6217E14DF7F1E00400117 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		52D6218014DF7F1E00400117 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		52D6218414DF7F1E00400117 /* JTGestureBasedTableViewDemo-Info.plist */ = {isa = PBXFileReference; path = "JTGestureBasedTableViewDemo-Info.plist"; sourceTree = "<group>"; };
+		52D6218414DF7F1E00400117 /* JTGestureBasedTableViewDemo-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "JTGestureBasedTableViewDemo-Info.plist"; sourceTree = "<group>"; };
 		52D6218614DF7F1E00400117 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		52D6218814DF7F1E00400117 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		52D6218A14DF7F1E00400117 /* JTGestureBasedTableViewDemo-Prefix.pch */ = {isa = PBXFileReference; path = "JTGestureBasedTableViewDemo-Prefix.pch"; sourceTree = "<group>"; };
-		52D6218B14DF7F1E00400117 /* AppDelegate.h */ = {isa = PBXFileReference; path = AppDelegate.h; sourceTree = "<group>"; };
+		52D6218A14DF7F1E00400117 /* JTGestureBasedTableViewDemo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JTGestureBasedTableViewDemo-Prefix.pch"; sourceTree = "<group>"; };
+		52D6218B14DF7F1E00400117 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		52D6218C14DF7F1E00400117 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		52D6218E14DF7F1E00400117 /* ViewController.h */ = {isa = PBXFileReference; path = ViewController.h; sourceTree = "<group>"; };
+		52D6218E14DF7F1E00400117 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		52D6218F14DF7F1E00400117 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		52D6219214DF7F1E00400117 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPhone.xib; sourceTree = "<group>"; };
 		52D6219514DF7F1E00400117 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPad.xib; sourceTree = "<group>"; };
 		52D6219C14DF7F1E00400117 /* JTGestureBasedTableViewDemoTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JTGestureBasedTableViewDemoTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		52D6219D14DF7F1E00400117 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		52D621A514DF7F1E00400117 /* JTGestureBasedTableViewDemoTests-Info.plist */ = {isa = PBXFileReference; path = "JTGestureBasedTableViewDemoTests-Info.plist"; sourceTree = "<group>"; };
+		52D621A514DF7F1E00400117 /* JTGestureBasedTableViewDemoTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "JTGestureBasedTableViewDemoTests-Info.plist"; sourceTree = "<group>"; };
 		52D621A714DF7F1E00400117 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		52D621A914DF7F1E00400117 /* JTGestureBasedTableViewDemoTests.h */ = {isa = PBXFileReference; path = JTGestureBasedTableViewDemoTests.h; sourceTree = "<group>"; };
+		52D621A914DF7F1E00400117 /* JTGestureBasedTableViewDemoTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JTGestureBasedTableViewDemoTests.h; sourceTree = "<group>"; };
 		52D621AA14DF7F1E00400117 /* JTGestureBasedTableViewDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JTGestureBasedTableViewDemoTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 

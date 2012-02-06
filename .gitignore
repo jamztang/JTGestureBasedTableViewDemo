@@ -1,0 +1,9 @@
+.DS_Store
+.svn
+build
+*.xcodeproj/*.mode1v3
+*.xcodeproj/*.pbxuser
+*.xcodeproj/project.xcworkspace/*
+*.xcodeproj/xcuserdata/*
+lib_output
+DerivedData
