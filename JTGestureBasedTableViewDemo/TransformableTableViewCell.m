@@ -18,22 +18,14 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         // Initialization code
-        
-        [self addObserver:self forKeyPath:@"frame"
-                  options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
-                  context:nil];
-        
-        
+
         CATransform3D transform = CATransform3DIdentity;
         transform.m34 = -1/500.f;
         [self.contentView.layer setSublayerTransform:transform];
-
         
         self.textLabel.layer.anchorPoint = CGPointMake(0.5, 0.0);
-        self.textLabel.clipsToBounds = NO;
 
         self.detailTextLabel.layer.anchorPoint = CGPointMake(0.5, 1.0);
-        self.detailTextLabel.clipsToBounds = NO;
         self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return self;
@@ -46,26 +38,24 @@
     // Configure the view for the selected state
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    if ([keyPath isEqualToString:@"frame"]) {
-
-        CGFloat fraction = self.frame.size.height / self.finishedHeight;
-        
-        CATransform3D transform = CATransform3DMakeRotation((M_PI / 2) - asinf(fraction), -1, 0, 0);
-        [self.textLabel.layer setTransform:transform];
-        [self.detailTextLabel.layer setTransform:CATransform3DMakeRotation((M_PI / 2) - asinf(fraction), 1, 0, 0)];
-    }
-}
-
 - (void)layoutSubviews {
     [super layoutSubviews];
 
-    CGFloat fraction = 1 / (self.frame.size.height / self.finishedHeight);
+    CGFloat fraction = (self.contentView.frame.size.height / self.finishedHeight);
+    fraction = MAX(MIN(1, fraction), 0);
     
-    self.textLabel.backgroundColor = [UIColor colorWithWhite:0.8 alpha:1];
-    self.detailTextLabel.backgroundColor = [UIColor colorWithWhite:0.6 alpha:1];
+    CATransform3D transform = CATransform3DMakeRotation((M_PI / 2) - asinf(fraction), -1, 0, 0);
+    [self.textLabel.layer setTransform:transform];
+    [self.detailTextLabel.layer setTransform:CATransform3DMakeRotation((M_PI / 2) - asinf(fraction), 1, 0, 0)];
 
-    CGFloat labelHeight = self.contentView.frame.size.height/2*fraction;
+    self.textLabel.backgroundColor = [UIColor colorWithWhite:0.65 + 0.3*fraction alpha:1];
+    self.detailTextLabel.backgroundColor = [UIColor colorWithWhite:0.7 + 0.275*fraction alpha:1];
+
+    fraction = 1 / fraction;
+
+    CGFloat labelHeight = (int)(self.contentView.frame.size.height/2*fraction + 0.5);
+    labelHeight = MIN(MAX(1, labelHeight), 800);
+    
     self.textLabel.frame = CGRectMake(0, 0, self.contentView.frame.size.width, labelHeight);
     self.detailTextLabel.frame = CGRectMake(0,self.contentView.frame.size.height - labelHeight, self.contentView.frame.size.width, labelHeight);
 }
