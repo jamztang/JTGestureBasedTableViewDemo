@@ -21,6 +21,8 @@
 		52D621A014DF7F1E00400117 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6217E14DF7F1E00400117 /* Foundation.framework */; };
 		52D621A814DF7F1E00400117 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52D621A614DF7F1E00400117 /* InfoPlist.strings */; };
 		52D621AB14DF7F1E00400117 /* JTGestureBasedTableViewDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D621AA14DF7F1E00400117 /* JTGestureBasedTableViewDemoTests.m */; };
+		52D621BA14DF84A500400117 /* TransformableTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D621B914DF84A500400117 /* TransformableTableViewCell.m */; };
+		52D621BC14DF86D600400117 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D621BB14DF86D600400117 /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +56,9 @@
 		52D621A714DF7F1E00400117 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		52D621A914DF7F1E00400117 /* JTGestureBasedTableViewDemoTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JTGestureBasedTableViewDemoTests.h; sourceTree = "<group>"; };
 		52D621AA14DF7F1E00400117 /* JTGestureBasedTableViewDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JTGestureBasedTableViewDemoTests.m; sourceTree = "<group>"; };
+		52D621B814DF84A500400117 /* TransformableTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformableTableViewCell.h; sourceTree = "<group>"; };
+		52D621B914DF84A500400117 /* TransformableTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransformableTableViewCell.m; sourceTree = "<group>"; };
+		52D621BB14DF86D600400117 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +66,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				52D621BC14DF86D600400117 /* QuartzCore.framework in Frameworks */,
 				52D6217D14DF7F1E00400117 /* UIKit.framework in Frameworks */,
 				52D6217F14DF7F1E00400117 /* Foundation.framework in Frameworks */,
 				52D6218114DF7F1E00400117 /* CoreGraphics.framework in Frameworks */,
@@ -83,6 +89,7 @@
 		52D6216D14DF7F1E00400117 = {
 			isa = PBXGroup;
 			children = (
+				52D621BB14DF86D600400117 /* QuartzCore.framework */,
 				52D6218214DF7F1E00400117 /* JTGestureBasedTableViewDemo */,
 				52D621A314DF7F1E00400117 /* JTGestureBasedTableViewDemoTests */,
 				52D6217B14DF7F1E00400117 /* Frameworks */,
@@ -117,6 +124,8 @@
 				52D6218C14DF7F1E00400117 /* AppDelegate.m */,
 				52D6218E14DF7F1E00400117 /* ViewController.h */,
 				52D6218F14DF7F1E00400117 /* ViewController.m */,
+				52D621B814DF84A500400117 /* TransformableTableViewCell.h */,
+				52D621B914DF84A500400117 /* TransformableTableViewCell.m */,
 				52D6219114DF7F1E00400117 /* ViewController_iPhone.xib */,
 				52D6219414DF7F1E00400117 /* ViewController_iPad.xib */,
 				52D6218314DF7F1E00400117 /* Supporting Files */,
@@ -264,6 +273,7 @@
 				52D6218914DF7F1E00400117 /* main.m in Sources */,
 				52D6218D14DF7F1E00400117 /* AppDelegate.m in Sources */,
 				52D6219014DF7F1E00400117 /* ViewController.m in Sources */,
+				52D621BA14DF84A500400117 /* TransformableTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -327,7 +337,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Keith Li (ZMNYK85DYB)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -342,6 +352,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "1CA8CFA0-0B9D-4AC6-BFFE-A7C2D73369FF";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

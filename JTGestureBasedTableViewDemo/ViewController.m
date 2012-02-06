@@ -7,13 +7,21 @@
 //
 
 #import "ViewController.h"
+#import "TransformableTableViewCell.h"
+#import <QuartzCore/QuartzCore.h>
+
+@interface ViewController ()
+@property (nonatomic, strong) NSMutableArray *selectedIndexPaths;
+@end
 
 @implementation ViewController
+@synthesize selectedIndexPaths;
 
 #pragma mark - View lifecycle
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
+        self.selectedIndexPaths = [NSMutableArray array];
     }
     return self;
 }
@@ -74,12 +82,14 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *cellIdentifier = @"MyCell";
 
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    TransformableTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+        cell = [[TransformableTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
+        cell.finishedHeight = 88;
     }
-
+    
     cell.textLabel.text = [NSString stringWithFormat:@"%d", indexPath.row];
+    cell.detailTextLabel.text = @" ";
     
     return cell;
 }
@@ -87,13 +97,20 @@
 #pragma mark UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([[tableView indexPathForSelectedRow] isEqual:indexPath]) {
-        return 44 * 2;
+    NSUInteger index = [self.selectedIndexPaths indexOfObject:indexPath];
+    if (index != NSNotFound) {
+        return 88;
     }
-    return 44;
+    return 36;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSUInteger index = [self.selectedIndexPaths indexOfObject:indexPath];
+    if (index != NSNotFound) {
+        [self.selectedIndexPaths removeObjectAtIndex:index];
+    } else {
+        [self.selectedIndexPaths addObject:indexPath];
+    }
     [tableView beginUpdates];
     [tableView endUpdates];
 }
