@@ -14,14 +14,15 @@
 @property (nonatomic, strong) NSMutableArray *rows;
 @property (nonatomic, strong) NSIndexPath    *addingIndexPath;
 @property (nonatomic, assign) CGFloat         addingRowHeight;
+@property (nonatomic, assign) CGPoint         startPinchingUpperPoint;
 @end
 
 @implementation ViewController
 @synthesize rows;
-@synthesize addingIndexPath, addingRowHeight;
+@synthesize addingIndexPath, addingRowHeight, startPinchingUpperPoint;
 
 #define ADDING_CELL @"Continue to pinch..."
-#define COMMITING_CREATE_CELL_HEIGHT 80
+#define COMMITING_CREATE_CELL_HEIGHT 60
 #define NORMAL_CELL_FINISHING_HEIGHT 60
 
 #pragma mark - View lifecycle
@@ -41,47 +42,9 @@
     [self.tableView addGestureRecognizer:recognizer];
 }
 
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-	[super viewWillDisappear:animated];
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-	[super viewDidDisappear:animated];
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    // Return YES for supported orientations
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
-    } else {
-        return YES;
-    }
-}
-
 #pragma mark Action
 
 - (void)pinchGestureRecognizer:(UIPinchGestureRecognizer *)recognizer {
-//    NSLog(@"%@", recognizer);
 //    NSLog(@"%d %f %f", [recognizer numberOfTouches], [recognizer velocity], [recognizer scale]);
     if (recognizer.state == UIGestureRecognizerStateEnded || [recognizer numberOfTouches] < 2) {
         if (self.addingIndexPath) {
@@ -104,28 +67,41 @@
 
     CGPoint location1 = [recognizer locationOfTouch:0 inView:self.tableView];
     CGPoint location2 = [recognizer locationOfTouch:1 inView:self.tableView];
+    CGPoint upperPoint = location1.y < location2.y ? location1 : location2;
 
     CGRect  rect = (CGRect){location1, location2.x - location1.x, location2.y - location1.y};
-    NSArray *indexPaths = [self.tableView indexPathsForRowsInRect:rect];
-
-    NSIndexPath *firstIndexPath = [indexPaths objectAtIndex:0];
-//    NSIndexPath *lastIndexPath  = [indexPaths lastObject];
 
     if (recognizer.state == UIGestureRecognizerStateBegan) {
-        self.addingIndexPath = [NSIndexPath indexPathForRow:firstIndexPath.row+1 inSection:firstIndexPath.section];
-        [self.rows insertObject:ADDING_CELL atIndex:firstIndexPath.row+1];
+        NSArray *indexPaths = [self.tableView indexPathsForRowsInRect:rect];
+        
+        NSIndexPath *firstIndexPath = [indexPaths objectAtIndex:0];
+        NSIndexPath *lastIndexPath  = [indexPaths lastObject];
+        NSInteger    midIndex = ((float)(firstIndexPath.row + lastIndexPath.row) / 2) + 0.5;
+        NSIndexPath *midIndexPath = [NSIndexPath indexPathForRow:midIndex inSection:firstIndexPath.section];
+
+        self.startPinchingUpperPoint = upperPoint;
+
+        self.addingIndexPath = midIndexPath;
+        [self.rows insertObject:ADDING_CELL atIndex:midIndex];
 
         [self.tableView beginUpdates];
         [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:self.addingIndexPath] withRowAnimation:UITableViewRowAnimationMiddle];
         [self.tableView endUpdates];
         
     } else if (recognizer.state == UIGestureRecognizerStateChanged) {
-        CGFloat diffRowHeight = ([recognizer scale] - 1) * 44;
-
+    
+        CGFloat diffRowHeight = CGRectGetHeight(rect) - CGRectGetHeight(rect)/[recognizer scale];
+        
+        NSLog(@"%f %f %f", CGRectGetHeight(rect), CGRectGetHeight(rect)/[recognizer scale], [recognizer scale]);
         if (self.addingRowHeight - diffRowHeight >= 1 || self.addingRowHeight - diffRowHeight <= -1) {
             self.addingRowHeight = diffRowHeight;
             [self.tableView reloadData];
         }
+        
+        CGPoint newUpperPoint = upperPoint;
+        CGFloat diffOffsetY = self.startPinchingUpperPoint.y - newUpperPoint.y;
+        CGPoint newOffset   = (CGPoint){self.tableView.contentOffset.x, self.tableView.contentOffset.y+diffOffsetY};
+        [self.tableView setContentOffset:newOffset animated:NO];
     }
 }
 
