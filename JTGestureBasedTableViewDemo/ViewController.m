@@ -61,6 +61,13 @@
             }
             self.addingIndexPath = nil;
             [self.tableView endUpdates];
+
+            // Restore contentInset while touch ends
+            [UIView beginAnimations:@"" context:nil];
+            [UIView setAnimationBeginsFromCurrentState:YES];
+            [UIView setAnimationDuration:0.5];  // Should not be less than the duration of row animation 
+            self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+            [UIView commitAnimations];
         }
         return;
     }
@@ -79,12 +86,16 @@
         NSInteger    midIndex = ((float)(firstIndexPath.row + lastIndexPath.row) / 2) + 0.5;
         NSIndexPath *midIndexPath = [NSIndexPath indexPathForRow:midIndex inSection:firstIndexPath.section];
 
+        // Setting up properties for referencing later when touches changes
         self.startPinchingUpperPoint = upperPoint;
-
         self.addingIndexPath = midIndexPath;
-        [self.rows insertObject:ADDING_CELL atIndex:midIndex];
+
+        // Creating contentInset to fulfill the whole screen, so our tableview won't occasionaly
+        // bounds back to the top while we don't have enough cells on the screen
+        self.tableView.contentInset = UIEdgeInsetsMake(self.view.frame.size.height, 0, self.view.frame.size.height, 0);
 
         [self.tableView beginUpdates];
+        [self.rows insertObject:ADDING_CELL atIndex:midIndex];
         [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:self.addingIndexPath] withRowAnimation:UITableViewRowAnimationMiddle];
         [self.tableView endUpdates];
         
@@ -97,7 +108,9 @@
             self.addingRowHeight = diffRowHeight;
             [self.tableView reloadData];
         }
-        
+
+        // Scrolls tableview according to the upper touch point to mimic a realistic
+        // dragging gesture
         CGPoint newUpperPoint = upperPoint;
         CGFloat diffOffsetY = self.startPinchingUpperPoint.y - newUpperPoint.y;
         CGPoint newOffset   = (CGPoint){self.tableView.contentOffset.x, self.tableView.contentOffset.y+diffOffsetY};
