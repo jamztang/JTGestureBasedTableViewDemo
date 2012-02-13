@@ -29,7 +29,7 @@
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
         self.rows = [NSMutableArray arrayWithObjects:
-                     @"Try to pinch between any cell to create a new one",
+                     @"Pinch between any cell to create a new one",
                      @"example cell 1",
                      @"example cell 2",
                      @"example cell 3",
@@ -65,6 +65,7 @@
     TransformableTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if (cell == nil) {
         cell = [[TransformableTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
+        cell.textLabel.adjustsFontSizeToFitWidth = YES;
     }
     NSObject *object = [self.rows objectAtIndex:indexPath.row];
     if ([object isEqual:ADDING_CELL]) {
