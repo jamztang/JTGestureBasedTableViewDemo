@@ -13,15 +13,11 @@
 
 @interface ViewController () <JTTableViewGestureDelegate>
 @property (nonatomic, strong) NSMutableArray *rows;
-@property (nonatomic, strong) NSIndexPath    *addingIndexPath;
-@property (nonatomic, assign) CGFloat         addingRowHeight;
-@property (nonatomic, assign) CGPoint         startPinchingUpperPoint;
 @property (nonatomic, strong) JTTableViewGestureRecognizer *tableViewRecognizer;
 @end
 
 @implementation ViewController
 @synthesize rows;
-@synthesize addingIndexPath, addingRowHeight, startPinchingUpperPoint;
 @synthesize tableViewRecognizer;
 
 #define ADDING_CELL @"Continue to pinch..."
