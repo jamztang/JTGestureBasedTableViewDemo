@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		523708F214E9461E00A955C4 /* JTTableViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 523708F114E9461E00A955C4 /* JTTableViewGestureRecognizer.m */; };
 		52D6217D14DF7F1E00400117 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6217C14DF7F1E00400117 /* UIKit.framework */; };
 		52D6217F14DF7F1E00400117 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6217E14DF7F1E00400117 /* Foundation.framework */; };
 		52D6218114DF7F1E00400117 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6218014DF7F1E00400117 /* CoreGraphics.framework */; };
@@ -36,6 +37,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		523708F014E9461E00A955C4 /* JTTableViewGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTTableViewGestureRecognizer.h; sourceTree = "<group>"; };
+		523708F114E9461E00A955C4 /* JTTableViewGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JTTableViewGestureRecognizer.m; sourceTree = "<group>"; };
 		52D6217814DF7F1E00400117 /* JTGestureBasedTableViewDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JTGestureBasedTableViewDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		52D6217C14DF7F1E00400117 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		52D6217E14DF7F1E00400117 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -126,6 +129,8 @@
 				52D6218F14DF7F1E00400117 /* ViewController.m */,
 				52D621B814DF84A500400117 /* TransformableTableViewCell.h */,
 				52D621B914DF84A500400117 /* TransformableTableViewCell.m */,
+				523708F014E9461E00A955C4 /* JTTableViewGestureRecognizer.h */,
+				523708F114E9461E00A955C4 /* JTTableViewGestureRecognizer.m */,
 				52D6219114DF7F1E00400117 /* ViewController_iPhone.xib */,
 				52D6219414DF7F1E00400117 /* ViewController_iPad.xib */,
 				52D6218314DF7F1E00400117 /* Supporting Files */,
@@ -274,6 +279,7 @@
 				52D6218D14DF7F1E00400117 /* AppDelegate.m in Sources */,
 				52D6219014DF7F1E00400117 /* ViewController.m in Sources */,
 				52D621BA14DF84A500400117 /* TransformableTableViewCell.m in Sources */,
+				523708F214E9461E00A955C4 /* JTTableViewGestureRecognizer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -454,6 +460,7 @@
 				52D621B014DF7F1E00400117 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		52D621B114DF7F1E00400117 /* Build configuration list for PBXNativeTarget "JTGestureBasedTableViewDemoTests" */ = {
 			isa = XCConfigurationList;
@@ -462,6 +469,7 @@
 				52D621B314DF7F1E00400117 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

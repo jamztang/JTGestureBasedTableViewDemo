@@ -41,10 +41,11 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
 
-    CGFloat fraction = (self.contentView.frame.size.height / self.finishedHeight);
+    CGFloat fraction = (self.frame.size.height / self.finishedHeight);
     fraction = MAX(MIN(1, fraction), 0);
     
-    CATransform3D transform = CATransform3DMakeRotation((M_PI / 2) - asinf(fraction), -1, 0, 0);
+    CGFloat angle = (M_PI / 2) - asinf(fraction);
+    CATransform3D transform = CATransform3DMakeRotation(angle, -1, 0, 0);
     [self.textLabel.layer setTransform:transform];
     [self.detailTextLabel.layer setTransform:CATransform3DMakeRotation((M_PI / 2) - asinf(fraction), 1, 0, 0)];
 
