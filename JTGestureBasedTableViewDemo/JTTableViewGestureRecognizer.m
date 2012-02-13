@@ -9,7 +9,8 @@
 #import "JTTableViewGestureRecognizer.h"
 
 @interface JTTableViewGestureRecognizer ()
-@property (nonatomic, assign) id <UITableViewDelegate, JTTableViewGestureDelegate> delegate;
+@property (nonatomic, assign) id <JTTableViewGestureDelegate> delegate;
+@property (nonatomic, assign) id <UITableViewDelegate>        tableViewDelegate;
 @property (nonatomic, assign) UITableView               *tableView;
 @property (nonatomic, assign) CGFloat                    addingRowHeight;
 @property (nonatomic, retain) NSIndexPath               *addingIndexPath;
@@ -18,7 +19,7 @@
 @end
 
 @implementation JTTableViewGestureRecognizer
-@synthesize delegate, tableView;
+@synthesize delegate, tableView, tableViewDelegate;
 @synthesize addingIndexPath, startPinchingUpperPoint, addingRowHeight;
 @synthesize pinchRecognizer;
 
@@ -85,7 +86,6 @@
 
         if (self.addingIndexPath) {
             [self.tableView beginUpdates];
-            //        [self.rows insertObject:ADDING_CELL atIndex:midIndex];
             
             [self.delegate gestureRecognizer:self needsAddRowAtIndexPath:self.addingIndexPath];
 
@@ -117,9 +117,9 @@
         return MAX(1, self.addingRowHeight);
     }
     
-    CGFloat normalCellHeight = 44;
-    if ([self.delegate respondsToSelector:@selector(tableView:heightForRowAtIndexPath:)]) {
-        normalCellHeight = [self.delegate tableView:aTableView heightForRowAtIndexPath:indexPath];
+    CGFloat normalCellHeight = aTableView.rowHeight;
+    if ([self.tableViewDelegate respondsToSelector:@selector(tableView:heightForRowAtIndexPath:)]) {
+        normalCellHeight = [self.tableViewDelegate tableView:aTableView heightForRowAtIndexPath:indexPath];
     }
     return normalCellHeight;
 }
@@ -127,20 +127,29 @@
 #pragma mark NSProxy
 
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
-    [anInvocation invokeWithTarget:self.delegate];
+    [anInvocation invokeWithTarget:self.tableViewDelegate];
 }
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {
-    return [(NSObject *)self.delegate methodSignatureForSelector:aSelector];
+    return [(NSObject *)self.tableViewDelegate methodSignatureForSelector:aSelector];
+}
+
+- (BOOL)respondsToSelector:(SEL)aSelector {
+    NSAssert(self.tableViewDelegate != nil, @"self.tableViewDelegate should not be nil, assign your tableView.delegate before enabling gestureRecognizer", nil);
+    if ([self.tableViewDelegate respondsToSelector:aSelector]) {
+        return YES;
+    }
+    return [[self class] instancesRespondToSelector:aSelector];
 }
 
 #pragma mark Class method
 
 + (JTTableViewGestureRecognizer *)gestureRecognizerWithTableView:(UITableView *)tableView delegate:(id<JTTableViewGestureDelegate>)delegate {
     JTTableViewGestureRecognizer *recognizer = [[JTTableViewGestureRecognizer alloc] init];
-    tableView.delegate              = recognizer;
     recognizer.delegate             = delegate;
     recognizer.tableView            = tableView;
+    recognizer.tableViewDelegate    = tableView.delegate;     // Assign the delegate before chaning the tableView's delegate
+    tableView.delegate              = recognizer;
     
     UIPinchGestureRecognizer *pinch = [[UIPinchGestureRecognizer alloc] initWithTarget:recognizer action:@selector(pinchGestureRecognizer:)];
     [tableView addGestureRecognizer:pinch];
