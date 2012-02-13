@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		523708F214E9461E00A955C4 /* JTTableViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 523708F114E9461E00A955C4 /* JTTableViewGestureRecognizer.m */; };
+		5296DB0C14E977C20044BD53 /* JTTableViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5296DB0914E977C20044BD53 /* JTTableViewGestureRecognizer.m */; };
+		5296DB0D14E977C20044BD53 /* TransformableTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5296DB0B14E977C20044BD53 /* TransformableTableViewCell.m */; };
 		52D6217D14DF7F1E00400117 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6217C14DF7F1E00400117 /* UIKit.framework */; };
 		52D6217F14DF7F1E00400117 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6217E14DF7F1E00400117 /* Foundation.framework */; };
 		52D6218114DF7F1E00400117 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6218014DF7F1E00400117 /* CoreGraphics.framework */; };
@@ -22,7 +23,6 @@
 		52D621A014DF7F1E00400117 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6217E14DF7F1E00400117 /* Foundation.framework */; };
 		52D621A814DF7F1E00400117 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52D621A614DF7F1E00400117 /* InfoPlist.strings */; };
 		52D621AB14DF7F1E00400117 /* JTGestureBasedTableViewDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D621AA14DF7F1E00400117 /* JTGestureBasedTableViewDemoTests.m */; };
-		52D621BA14DF84A500400117 /* TransformableTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D621B914DF84A500400117 /* TransformableTableViewCell.m */; };
 		52D621BC14DF86D600400117 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D621BB14DF86D600400117 /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
 
@@ -37,8 +37,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		523708F014E9461E00A955C4 /* JTTableViewGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTTableViewGestureRecognizer.h; sourceTree = "<group>"; };
-		523708F114E9461E00A955C4 /* JTTableViewGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JTTableViewGestureRecognizer.m; sourceTree = "<group>"; };
+		5296DB0814E977C20044BD53 /* JTTableViewGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTTableViewGestureRecognizer.h; sourceTree = "<group>"; };
+		5296DB0914E977C20044BD53 /* JTTableViewGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JTTableViewGestureRecognizer.m; sourceTree = "<group>"; };
+		5296DB0A14E977C20044BD53 /* TransformableTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformableTableViewCell.h; sourceTree = "<group>"; };
+		5296DB0B14E977C20044BD53 /* TransformableTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransformableTableViewCell.m; sourceTree = "<group>"; };
 		52D6217814DF7F1E00400117 /* JTGestureBasedTableViewDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JTGestureBasedTableViewDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		52D6217C14DF7F1E00400117 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		52D6217E14DF7F1E00400117 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -59,8 +61,6 @@
 		52D621A714DF7F1E00400117 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		52D621A914DF7F1E00400117 /* JTGestureBasedTableViewDemoTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JTGestureBasedTableViewDemoTests.h; sourceTree = "<group>"; };
 		52D621AA14DF7F1E00400117 /* JTGestureBasedTableViewDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JTGestureBasedTableViewDemoTests.m; sourceTree = "<group>"; };
-		52D621B814DF84A500400117 /* TransformableTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformableTableViewCell.h; sourceTree = "<group>"; };
-		52D621B914DF84A500400117 /* TransformableTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransformableTableViewCell.m; sourceTree = "<group>"; };
 		52D621BB14DF86D600400117 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -89,9 +89,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5296DB0714E977C20044BD53 /* JTGestureBasedTableView */ = {
+			isa = PBXGroup;
+			children = (
+				5296DB0814E977C20044BD53 /* JTTableViewGestureRecognizer.h */,
+				5296DB0914E977C20044BD53 /* JTTableViewGestureRecognizer.m */,
+				5296DB0A14E977C20044BD53 /* TransformableTableViewCell.h */,
+				5296DB0B14E977C20044BD53 /* TransformableTableViewCell.m */,
+			);
+			path = JTGestureBasedTableView;
+			sourceTree = "<group>";
+		};
 		52D6216D14DF7F1E00400117 = {
 			isa = PBXGroup;
 			children = (
+				5296DB0714E977C20044BD53 /* JTGestureBasedTableView */,
 				52D621BB14DF86D600400117 /* QuartzCore.framework */,
 				52D6218214DF7F1E00400117 /* JTGestureBasedTableViewDemo */,
 				52D621A314DF7F1E00400117 /* JTGestureBasedTableViewDemoTests */,
@@ -127,10 +139,6 @@
 				52D6218C14DF7F1E00400117 /* AppDelegate.m */,
 				52D6218E14DF7F1E00400117 /* ViewController.h */,
 				52D6218F14DF7F1E00400117 /* ViewController.m */,
-				52D621B814DF84A500400117 /* TransformableTableViewCell.h */,
-				52D621B914DF84A500400117 /* TransformableTableViewCell.m */,
-				523708F014E9461E00A955C4 /* JTTableViewGestureRecognizer.h */,
-				523708F114E9461E00A955C4 /* JTTableViewGestureRecognizer.m */,
 				52D6219114DF7F1E00400117 /* ViewController_iPhone.xib */,
 				52D6219414DF7F1E00400117 /* ViewController_iPad.xib */,
 				52D6218314DF7F1E00400117 /* Supporting Files */,
@@ -278,8 +286,8 @@
 				52D6218914DF7F1E00400117 /* main.m in Sources */,
 				52D6218D14DF7F1E00400117 /* AppDelegate.m in Sources */,
 				52D6219014DF7F1E00400117 /* ViewController.m in Sources */,
-				52D621BA14DF84A500400117 /* TransformableTableViewCell.m in Sources */,
-				523708F214E9461E00A955C4 /* JTTableViewGestureRecognizer.m in Sources */,
+				5296DB0C14E977C20044BD53 /* JTTableViewGestureRecognizer.m in Sources */,
+				5296DB0D14E977C20044BD53 /* TransformableTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
