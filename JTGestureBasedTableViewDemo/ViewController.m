@@ -20,7 +20,7 @@
 @synthesize rows;
 @synthesize tableViewRecognizer;
 
-#define ADDING_CELL @"Continue to pinch..."
+#define ADDING_CELL @"Continue..."
 #define COMMITING_CREATE_CELL_HEIGHT 60
 #define NORMAL_CELL_FINISHING_HEIGHT 60
 
@@ -29,10 +29,11 @@
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
         self.rows = [NSMutableArray arrayWithObjects:
-                     @"Pinch between any cell to create a new one",
+                     @"Drag down to create a new cell",
                      @"example cell 1",
                      @"example cell 2",
                      @"example cell 3",
+                     @"Pinch between any cell to create a new one",
                      @"example cell 4",
                      @"example cell 5",
                      @"example cell 6",
