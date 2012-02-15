@@ -50,7 +50,7 @@
     self.tableViewRecognizer = [self.tableView enableGestureTableViewWithDelegate:self];
     
     self.tableView.backgroundColor = [UIColor blackColor];
-    self.tableView.separatorColor  = [UIColor blackColor];
+    self.tableView.separatorStyle  = UITableViewCellSeparatorStyleNone;
     self.tableView.rowHeight       = NORMAL_CELL_FINISHING_HEIGHT;
 }
 
@@ -65,20 +65,22 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *cellIdentifier = @"MyCell";
 
-    TransformableTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    if (cell == nil) {
-        cell = [[TransformableTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
-        cell.textLabel.adjustsFontSizeToFitWidth = YES;
-        cell.textLabel.textColor = [UIColor whiteColor];
-    }
     NSObject *object = [self.rows objectAtIndex:indexPath.row];
-
-    // Setup tint color
-    cell.tintColor = [[UIColor redColor] colorWithHueOffset:(CGFloat)indexPath.row/100];
-
+    UIColor *backgroundColor = [[UIColor redColor] colorWithHueOffset:(CGFloat)indexPath.row/75];
     if ([object isEqual:ADDING_CELL]) {
+        static NSString *cellIdentifier = @"TransformableTableViewCell";
+        TransformableTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        if (cell == nil) {
+            cell = [[TransformableTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
+            cell.textLabel.adjustsFontSizeToFitWidth = YES;
+            cell.textLabel.textColor = [UIColor whiteColor];
+            cell.textLabel.textAlignment = UITextAlignmentCenter;
+        }
+
+        // Setup tint color
+        cell.tintColor = backgroundColor;
+
         cell.finishedHeight = COMMITING_CREATE_CELL_HEIGHT;
         if (cell.frame.size.height >= COMMITING_CREATE_CELL_HEIGHT) {
             cell.textLabel.text = @"Release to create cell...";
@@ -88,14 +90,26 @@
             cell.contentView.backgroundColor = [UIColor clearColor];
         }
         cell.detailTextLabel.text = @" ";
+        return cell;
+    
     } else {
-        cell.finishedHeight = NORMAL_CELL_FINISHING_HEIGHT;
+
+        static NSString *cellIdentifier = @"MyCell";
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+            cell.textLabel.adjustsFontSizeToFitWidth = YES;
+            cell.textLabel.textColor = [UIColor whiteColor];
+            cell.textLabel.backgroundColor = [UIColor clearColor];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        }
+
         cell.textLabel.text = [NSString stringWithFormat:@"%@", (NSString *)object];
         cell.detailTextLabel.text = @" ";
+        cell.contentView.backgroundColor = backgroundColor;
+        return cell;
     }
-    
 
-    return cell;
 }
 
 #pragma mark UITableViewDelegate
