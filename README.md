@@ -13,6 +13,14 @@ Abstract
 
 Clear for iPhone app has showed us so much we can do with a buttonless interface, and I am trying to reveal the technique behind the gesture based interaction, hopefully can heavy-lifted all of us whom trying to achieve the same.
 
+
+Demo
+----
+
+<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo1.png width=320></img> 
+<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo2.png width=320></img>
+
+
 Features
 --------
 
