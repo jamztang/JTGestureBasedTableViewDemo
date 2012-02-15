@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		5296DB0C14E977C20044BD53 /* JTTableViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5296DB0914E977C20044BD53 /* JTTableViewGestureRecognizer.m */; };
 		5296DB0D14E977C20044BD53 /* TransformableTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5296DB0B14E977C20044BD53 /* TransformableTableViewCell.m */; };
+		52B4AC6514EB47AC006574B9 /* UIColor+JTGestureBasedTableViewHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B4AC6414EB47AC006574B9 /* UIColor+JTGestureBasedTableViewHelper.m */; };
 		52D6217D14DF7F1E00400117 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6217C14DF7F1E00400117 /* UIKit.framework */; };
 		52D6217F14DF7F1E00400117 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6217E14DF7F1E00400117 /* Foundation.framework */; };
 		52D6218114DF7F1E00400117 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6218014DF7F1E00400117 /* CoreGraphics.framework */; };
@@ -41,6 +42,8 @@
 		5296DB0914E977C20044BD53 /* JTTableViewGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JTTableViewGestureRecognizer.m; sourceTree = "<group>"; };
 		5296DB0A14E977C20044BD53 /* TransformableTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformableTableViewCell.h; sourceTree = "<group>"; };
 		5296DB0B14E977C20044BD53 /* TransformableTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransformableTableViewCell.m; sourceTree = "<group>"; };
+		52B4AC6314EB47AC006574B9 /* UIColor+JTGestureBasedTableViewHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; path = "UIColor+JTGestureBasedTableViewHelper.h"; sourceTree = "<group>"; };
+		52B4AC6414EB47AC006574B9 /* UIColor+JTGestureBasedTableViewHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+JTGestureBasedTableViewHelper.m"; sourceTree = "<group>"; };
 		52D6217814DF7F1E00400117 /* JTGestureBasedTableViewDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JTGestureBasedTableViewDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		52D6217C14DF7F1E00400117 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		52D6217E14DF7F1E00400117 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -96,6 +99,8 @@
 				5296DB0914E977C20044BD53 /* JTTableViewGestureRecognizer.m */,
 				5296DB0A14E977C20044BD53 /* TransformableTableViewCell.h */,
 				5296DB0B14E977C20044BD53 /* TransformableTableViewCell.m */,
+				52B4AC6314EB47AC006574B9 /* UIColor+JTGestureBasedTableViewHelper.h */,
+				52B4AC6414EB47AC006574B9 /* UIColor+JTGestureBasedTableViewHelper.m */,
 			);
 			path = JTGestureBasedTableView;
 			sourceTree = "<group>";
@@ -288,6 +293,7 @@
 				52D6219014DF7F1E00400117 /* ViewController.m in Sources */,
 				5296DB0C14E977C20044BD53 /* JTTableViewGestureRecognizer.m in Sources */,
 				5296DB0D14E977C20044BD53 /* TransformableTableViewCell.m in Sources */,
+				52B4AC6514EB47AC006574B9 /* UIColor+JTGestureBasedTableViewHelper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,9 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TransformableTableViewCell : UITableViewCell
-
-@property (nonatomic, assign) CGFloat  finishedHeight;
-@property (nonatomic, retain) UIColor *tintColor;   // default is white color
-
+@interface UIColor (JTGestureBasedTableViewHelper)
+- (UIColor *)colorWithBrightness:(CGFloat)brightness;
+- (UIColor *)colorWithHueOffset:(CGFloat)hueOffset;
 @end
+

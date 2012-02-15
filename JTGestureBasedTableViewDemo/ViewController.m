@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "TransformableTableViewCell.h"
 #import "JTTableViewGestureRecognizer.h"
+#import "UIColor+JTGestureBasedTableViewHelper.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface ViewController () <JTTableViewGestureDelegate>
@@ -30,13 +31,12 @@
     if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
         self.rows = [NSMutableArray arrayWithObjects:
                      @"Drag down to create a new cell",
-                     @"example cell 1",
-                     @"example cell 2",
-                     @"example cell 3",
+                     @" ",
+                     @" ",
                      @"Pinch between any cell to create a new one",
-                     @"example cell 4",
-                     @"example cell 5",
-                     @"example cell 6",
+                     @" ",
+                     @" ",
+                     @" ",
                      nil];
     }
     return self;
@@ -48,6 +48,10 @@
 	// Do any additional setup after loading the view, typically from a nib.
 
     self.tableViewRecognizer = [self.tableView enableGestureTableViewWithDelegate:self];
+    
+    self.tableView.backgroundColor = [UIColor blackColor];
+    self.tableView.separatorColor  = [UIColor blackColor];
+    self.tableView.rowHeight       = NORMAL_CELL_FINISHING_HEIGHT;
 }
 
 #pragma mark UITableViewDatasource
@@ -67,14 +71,21 @@
     if (cell == nil) {
         cell = [[TransformableTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
         cell.textLabel.adjustsFontSizeToFitWidth = YES;
+        cell.textLabel.textColor = [UIColor whiteColor];
     }
     NSObject *object = [self.rows objectAtIndex:indexPath.row];
+
+    // Setup tint color
+    cell.tintColor = [[UIColor redColor] colorWithHueOffset:(CGFloat)indexPath.row/100];
+
     if ([object isEqual:ADDING_CELL]) {
         cell.finishedHeight = COMMITING_CREATE_CELL_HEIGHT;
         if (cell.frame.size.height >= COMMITING_CREATE_CELL_HEIGHT) {
             cell.textLabel.text = @"Release to create cell...";
+            cell.contentView.backgroundColor = cell.tintColor;
         } else {
             cell.textLabel.text = ADDING_CELL;
+            cell.contentView.backgroundColor = [UIColor clearColor];
         }
         cell.detailTextLabel.text = @" ";
     } else {
@@ -82,6 +93,7 @@
         cell.textLabel.text = [NSString stringWithFormat:@"%@", (NSString *)object];
         cell.detailTextLabel.text = @" ";
     }
+    
 
     return cell;
 }

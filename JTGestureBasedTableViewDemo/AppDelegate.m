@@ -23,6 +23,8 @@
     // Will auto load the corresponding viewController.xib
     self.viewController = [[ViewController alloc] initWithNibName:nil bundle:nil];
 
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque];
+
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
     return YES;

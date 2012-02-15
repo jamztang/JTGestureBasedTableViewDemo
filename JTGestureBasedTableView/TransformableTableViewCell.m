@@ -7,11 +7,12 @@
  */
 
 #import "TransformableTableViewCell.h"
+#import "UIColor+JTGestureBasedTableViewHelper.h"
 #import <QuartzCore/QuartzCore.h>
 
 @implementation TransformableTableViewCell
 
-@synthesize finishedHeight;
+@synthesize finishedHeight, tintColor;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -27,6 +28,11 @@
 
         self.detailTextLabel.layer.anchorPoint = CGPointMake(0.5, 1.0);
         self.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+        self.textLabel.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+        self.detailTextLabel.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+
+        self.tintColor = [UIColor whiteColor];
     }
     return self;
 }
@@ -49,12 +55,13 @@
     [self.textLabel.layer setTransform:transform];
     [self.detailTextLabel.layer setTransform:CATransform3DMakeRotation((M_PI / 2) - asinf(fraction), 1, 0, 0)];
 
-    self.textLabel.backgroundColor = [UIColor colorWithWhite:0.65 + 0.3*fraction alpha:1];
-    self.detailTextLabel.backgroundColor = [UIColor colorWithWhite:0.7 + 0.275*fraction alpha:1];
+    self.textLabel.backgroundColor = [self.tintColor colorWithBrightness:0.3 + 0.7*fraction];
+    self.detailTextLabel.backgroundColor = [self.tintColor colorWithBrightness:0.5 + 0.5*fraction];
+    
 
     fraction = 1 / fraction;
 
-    CGFloat labelHeight = (int)(self.contentView.frame.size.height/2*fraction + 0.5);
+    CGFloat labelHeight = ceilf(self.contentView.frame.size.height/2*fraction);
     labelHeight = MIN(MAX(1, labelHeight), 800);
     
     self.textLabel.frame = CGRectMake(0, 0, self.contentView.frame.size.width, labelHeight);
