@@ -10,7 +10,6 @@
 #import "TransformableTableViewCell.h"
 #import "JTTableViewGestureRecognizer.h"
 #import "UIColor+JTGestureBasedTableViewHelper.h"
-#import <QuartzCore/QuartzCore.h>
 
 @interface ViewController () <JTTableViewGestureDelegate>
 @property (nonatomic, strong) NSMutableArray *rows;
@@ -29,6 +28,7 @@
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
+        // In this example, we setup self.rows as datasource
         self.rows = [NSMutableArray arrayWithObjects:
                      @"Drag down to create a new cell",
                      @" ",
@@ -46,7 +46,9 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-
+    
+    // Setup your tableView.delegate and tableView.datasource first, then enable gesture
+    // recognition in one line.
     self.tableViewRecognizer = [self.tableView enableGestureTableViewWithDelegate:self];
     
     self.tableView.backgroundColor = [UIColor blackColor];

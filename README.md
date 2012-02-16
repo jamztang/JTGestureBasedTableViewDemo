@@ -32,10 +32,58 @@ It only supports two features at the moment.
 How To Use It
 -------------
 
+
 ### Installation
 
 Include all header and implementation files in JTGestureBasedTabeView/ into your project, and also links the QuartzCore framework to your target.
-Will add more instructions soon, at the moment, please follow ViewController.m for sample usage.
+
+
+### Setting up your UITableView for your viewController
+
+    #import "JTTableViewGestureRecognizer.h"
+    
+    @interface ViewController () <JTTableViewGestureDelegate>
+    @property (nonatomic, strong) NSMutableArray *rows;
+    @property (nonatomic, strong) JTTableViewGestureRecognizer *tableViewRecognizer;
+    @end
+    
+    @implementation ViewController
+    @synthesize tableViewRecognizer;
+    
+    - (void)viewDidload {
+        /*
+        :
+        */
+    
+        // In our examples, we setup self.rows as datasource
+        self.rows = ...;
+        
+        // Setup your tableView.delegate and tableView.datasource first, then enable gesture
+        // recognition in one line.
+        self.tableViewRecognizer = [self.tableView enableGestureTableViewWithDelegate:self];
+    }
+
+
+### Implement the JTTableViewGestureDelegate, and also those official UITableViewDatasource @required methods
+
+    #pragma mark JTTableViewGestureRecognizer
+    
+    - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsAddRowAtIndexPath:(NSIndexPath *)indexPath {
+        [self.rows insertObject:ADDING_CELL atIndex:indexPath.row];
+    }
+    
+    - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsCommitRowAtIndexPath:(NSIndexPath *)indexPath {
+        [self.rows replaceObjectAtIndex:indexPath.row withObject:@"Added!"];
+        UITableViewCell *cell = (id)[gestureRecognizer.tableView cellForRowAtIndexPath:indexPath];
+        cell.textLabel.text = @"Just Added!";
+    }
+    
+    - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsDiscardRowAtIndexPath:(NSIndexPath *)indexPath {
+        [self.rows removeObjectAtIndex:indexPath.row];
+    }
+
+
+Don't forget to look at JTGestureBasedTableViewDemo/ViewController.m for a complete working usage.
 
 
 License
