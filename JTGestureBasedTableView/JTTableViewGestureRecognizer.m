@@ -12,16 +12,19 @@ typedef enum {
     JTTableViewGestureRecognizerStateNone,
     JTTableViewGestureRecognizerStateDragging,
     JTTableViewGestureRecognizerStatePinching,
+    JTTableViewGestureRecognizerStatePanning,
 } JTTableViewGestureRecognizerState;
 
-@interface JTTableViewGestureRecognizer ()
+@interface JTTableViewGestureRecognizer () <UIGestureRecognizerDelegate>
 @property (nonatomic, assign) id <JTTableViewGestureDelegate> delegate;
 @property (nonatomic, assign) id <UITableViewDelegate>        tableViewDelegate;
 @property (nonatomic, assign) UITableView               *tableView;
 @property (nonatomic, assign) CGFloat                    addingRowHeight;
 @property (nonatomic, retain) NSIndexPath               *addingIndexPath;
+@property (nonatomic, assign) JTTableViewCellEnterState  addingCellState;
 @property (nonatomic, assign) CGPoint                    startPinchingUpperPoint;
 @property (nonatomic, retain) UIPinchGestureRecognizer  *pinchRecognizer;
+@property (nonatomic, retain) UIPanGestureRecognizer    *panRecognizer;
 @property (nonatomic, assign) JTTableViewGestureRecognizerState state;
 
 - (void)commitOrDiscardCell;
@@ -31,8 +34,8 @@ typedef enum {
 @implementation JTTableViewGestureRecognizer
 @synthesize delegate, tableView, tableViewDelegate;
 @synthesize addingIndexPath, startPinchingUpperPoint, addingRowHeight;
-@synthesize pinchRecognizer;
-@synthesize state;
+@synthesize pinchRecognizer, panRecognizer;
+@synthesize state, addingCellState;
 
 #pragma mark Logic
 
@@ -133,6 +136,89 @@ typedef enum {
     }
 }
 
+- (void)panGestureRecognizer:(UIPanGestureRecognizer *)recognizer {
+    if ((recognizer.state == UIGestureRecognizerStateBegan
+        || recognizer.state == UIGestureRecognizerStateChanged)
+        && [recognizer numberOfTouches] > 0) {
+
+        // TODO: should ask delegate before changing cell's content view
+
+        self.state = JTTableViewGestureRecognizerStatePanning;
+
+        CGPoint location1 = [recognizer locationOfTouch:0 inView:self.tableView];
+        NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:location1];
+        UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+
+        CGPoint translation = [recognizer translationInView:self.tableView];
+        cell.contentView.frame = CGRectOffset(cell.contentView.bounds, translation.x, 0);
+
+        self.addingIndexPath = indexPath;
+
+        if ([self.delegate respondsToSelector:@selector(gestureRecognizer:didChangeContentViewTranslation:forRowAtIndexPath:)]) {
+            [self.delegate gestureRecognizer:self didChangeContentViewTranslation:translation forRowAtIndexPath:indexPath];
+        }
+
+        // Commiting state y value should be able to configured by delegate?
+        if (fabsf(translation.x) >= self.tableView.bounds.size.width / 4) {
+            if (self.addingCellState == JTTableViewCellEnterStateMiddle) {
+                self.addingCellState = translation.x > 0 ? JTTableViewCellEnterStateRight : JTTableViewCellEnterStateLeft;
+            }
+
+            [self.delegate gestureRecognizer:self didEnterState:self.addingCellState forRowAtIndexPath:indexPath];
+        } else {
+            if (self.addingCellState != JTTableViewCellEnterStateMiddle) {
+                self.addingCellState = JTTableViewCellEnterStateMiddle;
+            }
+            [self.delegate gestureRecognizer:self didEnterState:self.addingCellState forRowAtIndexPath:indexPath];
+        }
+
+    } else if (recognizer.state == UIGestureRecognizerStateEnded) {
+
+        NSIndexPath *indexPath = self.addingIndexPath;
+
+        // Removes addingIndexPath before updating then tableView will be able
+        // to determine correct table row height
+        self.addingIndexPath = nil;
+
+        UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+        CGPoint translation = [recognizer translationInView:self.tableView];
+        if (fabsf(translation.x) >= self.tableView.bounds.size.width / 4) {
+            [self.tableView beginUpdates];
+            UITableViewRowAnimation rowAnimation = translation.x >= 0 ? UITableViewRowAnimationRight : UITableViewRowAnimationLeft;
+            [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:rowAnimation];
+            [self.delegate gestureRecognizer:self needsDiscardRowAtIndexPath:indexPath];
+            [self.tableView endUpdates];
+        } else {
+            [UIView beginAnimations:@"" context:nil];
+            cell.contentView.frame = cell.contentView.bounds;
+            [UIView commitAnimations];
+        }
+        
+        self.state = JTTableViewGestureRecognizerStateNone;
+    }
+}
+
+#pragma mark UIGestureRecognizer
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+
+    if (gestureRecognizer == self.panRecognizer) {
+        UIPanGestureRecognizer *pan = (UIPanGestureRecognizer *)gestureRecognizer;
+        
+        CGPoint point = [pan translationInView:self.tableView];
+
+        // The pan gesture recognizer will fail the original scrollView scroll
+        // gesture, we wants to ensure we are panning left/right to enable the
+        // pan gesture.
+        if (fabsf(point.y) > fabsf(point.x)) {
+            return NO;
+        } else {
+            return YES;
+        }
+    }
+    return YES;
+}
+
 #pragma mark UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)aTableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -217,6 +303,12 @@ typedef enum {
     UIPinchGestureRecognizer *pinch = [[UIPinchGestureRecognizer alloc] initWithTarget:recognizer action:@selector(pinchGestureRecognizer:)];
     [tableView addGestureRecognizer:pinch];
     recognizer.pinchRecognizer = pinch;
+
+    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:recognizer action:@selector(panGestureRecognizer:)];
+    [tableView addGestureRecognizer:pan];
+    pan.delegate = recognizer;
+    recognizer.panRecognizer = pan;
+
     return recognizer;
 }
 

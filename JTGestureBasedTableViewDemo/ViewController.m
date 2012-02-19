@@ -84,11 +84,11 @@
         cell.tintColor = backgroundColor;
 
         cell.finishedHeight = COMMITING_CREATE_CELL_HEIGHT;
-        if (cell.frame.size.height >= COMMITING_CREATE_CELL_HEIGHT) {
+        if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT) {
             cell.textLabel.text = @"Release to create cell...";
             cell.contentView.backgroundColor = cell.tintColor;
         } else {
-            cell.textLabel.text = ADDING_CELL;
+            cell.textLabel.text = (NSString *)object;
             cell.contentView.backgroundColor = [UIColor clearColor];
         }
         cell.detailTextLabel.text = @" ";
@@ -139,6 +139,23 @@
 
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsDiscardRowAtIndexPath:(NSIndexPath *)indexPath {
     [self.rows removeObjectAtIndex:indexPath.row];
+}
+
+- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer didEnterState:(JTTableViewCellEnterState)state forRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    
+    UIColor *backgroundColor = [[UIColor redColor] colorWithHueOffset:(CGFloat)indexPath.row/75];
+    switch (state) {
+        case JTTableViewCellEnterStateMiddle:
+            cell.contentView.backgroundColor = backgroundColor;
+            break;
+        case JTTableViewCellEnterStateRight:
+            cell.contentView.backgroundColor = [UIColor greenColor];
+            break;
+        default:
+            cell.contentView.backgroundColor = [UIColor redColor];
+            break;
+    }
 }
 
 @end

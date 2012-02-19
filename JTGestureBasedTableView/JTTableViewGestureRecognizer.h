@@ -8,6 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+typedef enum {
+    JTTableViewCellEnterStateMiddle,
+    JTTableViewCellEnterStateLeft,
+    JTTableViewCellEnterStateRight,
+} JTTableViewCellEnterState;
+
 @protocol JTTableViewGestureDelegate;
 
 @interface JTTableViewGestureRecognizer : NSObject <UITableViewDelegate>
@@ -24,10 +30,13 @@
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsAddRowAtIndexPath:(NSIndexPath *)indexPath;
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsCommitRowAtIndexPath:(NSIndexPath *)indexPath;
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsDiscardRowAtIndexPath:(NSIndexPath *)indexPath;
+- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer didEnterState:(JTTableViewCellEnterState)state forRowAtIndexPath:(NSIndexPath *)indexPath;
+
 @optional
 
 - (NSIndexPath *)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer willCreateCellAtIndexPath:(NSIndexPath *)indexPath;
 - (CGFloat)heightForCommittingRowForGestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer;
+- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer didChangeContentViewTranslation:(CGPoint)translation forRowAtIndexPath:(NSIndexPath *)indexPath;
 
 @end
 
