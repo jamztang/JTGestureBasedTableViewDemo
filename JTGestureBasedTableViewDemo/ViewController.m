@@ -69,7 +69,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 
     NSObject *object = [self.rows objectAtIndex:indexPath.row];
-    UIColor *backgroundColor = [[UIColor redColor] colorWithHueOffset:(CGFloat)indexPath.row/75];
+    UIColor *backgroundColor = [[UIColor redColor] colorWithHueOffset:0.12 * indexPath.row / [self tableView:tableView numberOfRowsInSection:indexPath.section]];
     if ([object isEqual:ADDING_CELL]) {
         static NSString *cellIdentifier = @"TransformableTableViewCell";
         TransformableTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
@@ -144,7 +144,7 @@
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer didEnterState:(JTTableViewCellEnterState)state forRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
     
-    UIColor *backgroundColor = [[UIColor redColor] colorWithHueOffset:(CGFloat)indexPath.row/75];
+    UIColor *backgroundColor = [[UIColor redColor] colorWithHueOffset:0.12 * indexPath.row / [self tableView:self.tableView numberOfRowsInSection:indexPath.section]];
     switch (state) {
         case JTTableViewCellEnterStateMiddle:
             cell.contentView.backgroundColor = backgroundColor;
@@ -153,7 +153,7 @@
             cell.contentView.backgroundColor = [UIColor greenColor];
             break;
         default:
-            cell.contentView.backgroundColor = [UIColor redColor];
+            cell.contentView.backgroundColor = [UIColor darkGrayColor];
             break;
     }
 }
