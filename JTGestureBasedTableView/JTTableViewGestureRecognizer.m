@@ -143,16 +143,20 @@ typedef enum {
 
         // TODO: should ask delegate before changing cell's content view
 
-        self.state = JTTableViewGestureRecognizerStatePanning;
-
         CGPoint location1 = [recognizer locationOfTouch:0 inView:self.tableView];
-        NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:location1];
+        
+        NSIndexPath *indexPath = self.addingIndexPath;
+        if ( ! indexPath) {
+            indexPath = [self.tableView indexPathForRowAtPoint:location1];
+            self.addingIndexPath = indexPath;
+        }
+        
+        self.state = JTTableViewGestureRecognizerStatePanning;
+        
         UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
 
         CGPoint translation = [recognizer translationInView:self.tableView];
         cell.contentView.frame = CGRectOffset(cell.contentView.bounds, translation.x, 0);
-
-        self.addingIndexPath = indexPath;
 
         if ([self.delegate respondsToSelector:@selector(gestureRecognizer:didChangeContentViewTranslation:forRowAtIndexPath:)]) {
             [self.delegate gestureRecognizer:self didChangeContentViewTranslation:translation forRowAtIndexPath:indexPath];
@@ -206,11 +210,14 @@ typedef enum {
         UIPanGestureRecognizer *pan = (UIPanGestureRecognizer *)gestureRecognizer;
         
         CGPoint point = [pan translationInView:self.tableView];
+        CGPoint location = [pan locationInView:self.tableView];
 
         // The pan gesture recognizer will fail the original scrollView scroll
         // gesture, we wants to ensure we are panning left/right to enable the
         // pan gesture.
         if (fabsf(point.y) > fabsf(point.x)) {
+            return NO;
+        } else if ([self.tableView indexPathForRowAtPoint:location] == nil) {
             return NO;
         } else {
             return YES;
