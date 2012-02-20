@@ -19,15 +19,17 @@ Demo
 
 <img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo1.png width=320></img> 
 <img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo2.png width=320></img>
+<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo3.png width=320></img>
 
 
 Features
 --------
 
-It only supports two features at the moment.
+It only supports three features at the moment.
 
 - Pull down to add cell
 - Pinch to create cell
+- Panning on cell gesture
 
 How To Use It
 -------------

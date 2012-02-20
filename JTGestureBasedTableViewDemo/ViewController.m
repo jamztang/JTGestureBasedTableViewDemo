@@ -31,13 +31,10 @@
     if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
         // In this example, we setup self.rows as datasource
         self.rows = [NSMutableArray arrayWithObjects:
+                     @"Swipe to the right to complete",
+                     @"Swipe to left to delete",
                      @"Drag down to create a new cell",
-                     @" ",
-                     @" ",
                      @"Pinch between any cell to create a new one",
-                     @" ",
-                     @" ",
-                     @" ",
                      nil];
     }
     return self;
