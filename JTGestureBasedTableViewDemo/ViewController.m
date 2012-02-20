@@ -194,4 +194,9 @@
     [tableView endUpdates];
 }
 
+// Optional delegate method to implement for configuration of cell commitEditing length
+- (CGFloat)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer lengthForCommitEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+    return JTTableViewCommitEditingRowDefaultLength;
+}
+
 @end

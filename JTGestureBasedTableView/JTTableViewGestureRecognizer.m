@@ -15,6 +15,8 @@ typedef enum {
     JTTableViewGestureRecognizerStatePanning,
 } JTTableViewGestureRecognizerState;
 
+CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
+
 @interface JTTableViewGestureRecognizer () <UIGestureRecognizerDelegate>
 @property (nonatomic, assign) id <JTTableViewGestureDelegate> delegate;
 @property (nonatomic, assign) id <UITableViewDelegate>        tableViewDelegate;
@@ -161,9 +163,12 @@ typedef enum {
         if ([self.delegate respondsToSelector:@selector(gestureRecognizer:didChangeContentViewTranslation:forRowAtIndexPath:)]) {
             [self.delegate gestureRecognizer:self didChangeContentViewTranslation:translation forRowAtIndexPath:indexPath];
         }
-
-        // Commiting state y value should be able to configured by delegate?
-        if (fabsf(translation.x) >= self.tableView.bounds.size.width / 4) {
+        
+        CGFloat commitEditingLength = JTTableViewCommitEditingRowDefaultLength;
+        if ([self.delegate respondsToSelector:@selector(gestureRecognizer:lengthForCommitEditingRowAtIndexPath:)]) {
+            commitEditingLength = [self.delegate gestureRecognizer:self lengthForCommitEditingRowAtIndexPath:indexPath];
+        }
+        if (fabsf(translation.x) >= commitEditingLength) {
             if (self.addingCellState == JTTableViewCellEditingStateMiddle) {
                 self.addingCellState = translation.x > 0 ? JTTableViewCellEditingStateRight : JTTableViewCellEditingStateLeft;
             }
@@ -187,7 +192,12 @@ typedef enum {
 
         UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
         CGPoint translation = [recognizer translationInView:self.tableView];
-        if (fabsf(translation.x) >= self.tableView.bounds.size.width / 4) {
+        
+        CGFloat commitEditingLength = JTTableViewCommitEditingRowDefaultLength;
+        if ([self.delegate respondsToSelector:@selector(gestureRecognizer:lengthForCommitEditingRowAtIndexPath:)]) {
+            commitEditingLength = [self.delegate gestureRecognizer:self lengthForCommitEditingRowAtIndexPath:indexPath];
+        }
+        if (fabsf(translation.x) >= commitEditingLength) {
             if ([self.delegate respondsToSelector:@selector(gestureRecognizer:commitEditingState:forRowAtIndexPath:)]) {
                 [self.delegate gestureRecognizer:self commitEditingState:self.addingCellState forRowAtIndexPath:indexPath];
             }

@@ -14,6 +14,8 @@ typedef enum {
     JTTableViewCellEditingStateRight,
 } JTTableViewCellEditingState;
 
+extern CGFloat const JTTableViewCommitEditingRowDefaultLength;
+
 @protocol JTTableViewGestureDelegate;
 
 @interface JTTableViewGestureRecognizer : NSObject <UITableViewDelegate>
@@ -41,6 +43,7 @@ typedef enum {
 - (BOOL)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer canEditRowAtIndexPath:(NSIndexPath *)indexPath;
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer didEnterEditingState:(JTTableViewCellEditingState)state forRowAtIndexPath:(NSIndexPath *)indexPath;
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer commitEditingState:(JTTableViewCellEditingState)state forRowAtIndexPath:(NSIndexPath *)indexPath;
+- (CGFloat)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer lengthForCommitEditingRowAtIndexPath:(NSIndexPath *)indexPath;
 
 @end
 
