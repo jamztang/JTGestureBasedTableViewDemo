@@ -21,7 +21,7 @@ typedef enum {
 @property (nonatomic, assign) UITableView               *tableView;
 @property (nonatomic, assign) CGFloat                    addingRowHeight;
 @property (nonatomic, retain) NSIndexPath               *addingIndexPath;
-@property (nonatomic, assign) JTTableViewCellEnterState  addingCellState;
+@property (nonatomic, assign) JTTableViewCellEditingState  addingCellState;
 @property (nonatomic, assign) CGPoint                    startPinchingUpperPoint;
 @property (nonatomic, retain) UIPinchGestureRecognizer  *pinchRecognizer;
 @property (nonatomic, retain) UIPanGestureRecognizer    *panRecognizer;
@@ -164,17 +164,17 @@ typedef enum {
 
         // Commiting state y value should be able to configured by delegate?
         if (fabsf(translation.x) >= self.tableView.bounds.size.width / 4) {
-            if (self.addingCellState == JTTableViewCellEnterStateMiddle) {
-                self.addingCellState = translation.x > 0 ? JTTableViewCellEnterStateRight : JTTableViewCellEnterStateLeft;
+            if (self.addingCellState == JTTableViewCellEditingStateMiddle) {
+                self.addingCellState = translation.x > 0 ? JTTableViewCellEditingStateRight : JTTableViewCellEditingStateLeft;
             }
         } else {
-            if (self.addingCellState != JTTableViewCellEnterStateMiddle) {
-                self.addingCellState = JTTableViewCellEnterStateMiddle;
+            if (self.addingCellState != JTTableViewCellEditingStateMiddle) {
+                self.addingCellState = JTTableViewCellEditingStateMiddle;
             }
         }
 
-        if ([self.delegate respondsToSelector:@selector(gestureRecognizer:didEnterState:forRowAtIndexPath:)]) {
-            [self.delegate gestureRecognizer:self didEnterState:self.addingCellState forRowAtIndexPath:indexPath];
+        if ([self.delegate respondsToSelector:@selector(gestureRecognizer:didEnterEditingState:forRowAtIndexPath:)]) {
+            [self.delegate gestureRecognizer:self didEnterEditingState:self.addingCellState forRowAtIndexPath:indexPath];
         }
 
     } else if (recognizer.state == UIGestureRecognizerStateEnded) {
@@ -197,7 +197,7 @@ typedef enum {
             [UIView commitAnimations];
         }
         
-        self.addingCellState = JTTableViewCellEnterStateMiddle;
+        self.addingCellState = JTTableViewCellEditingStateMiddle;
         self.state = JTTableViewGestureRecognizerStateNone;
     }
 }

@@ -150,15 +150,15 @@
 
 #pragma mark JTTableViewGestureRecognizer (Pan)
 
-- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer didEnterState:(JTTableViewCellEnterState)state forRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer didEnterEditingState:(JTTableViewCellEditingState)state forRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
 
     UIColor *backgroundColor = nil;
     switch (state) {
-        case JTTableViewCellEnterStateMiddle:
+        case JTTableViewCellEditingStateMiddle:
             backgroundColor = [[UIColor redColor] colorWithHueOffset:0.12 * indexPath.row / [self tableView:self.tableView numberOfRowsInSection:indexPath.section]];
             break;
-        case JTTableViewCellEnterStateRight:
+        case JTTableViewCellEditingStateRight:
             backgroundColor = [UIColor greenColor];
             break;
         default:
@@ -176,19 +176,19 @@
     return YES;
 }
 
-- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer commitEditingState:(JTTableViewCellEnterState)state forRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer commitEditingState:(JTTableViewCellEditingState)state forRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableView *tableView = gestureRecognizer.tableView;
     [tableView beginUpdates];
-    if (state == JTTableViewCellEnterStateLeft) {
-        // An example to discard the cell at JTTableViewCellEnterStateLeft
+    if (state == JTTableViewCellEditingStateLeft) {
+        // An example to discard the cell at JTTableViewCellEditingStateLeft
         [self.rows removeObjectAtIndex:indexPath.row];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
-    } else if (state == JTTableViewCellEnterStateRight) {
-        // An example to retain the cell at commiting at JTTableViewCellEnterStateRight
+    } else if (state == JTTableViewCellEditingStateRight) {
+        // An example to retain the cell at commiting at JTTableViewCellEditingStateRight
         [self.rows replaceObjectAtIndex:indexPath.row withObject:DONE_CELL];
         [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
     } else {
-        // JTTableViewCellEnterStateMiddle shouldn't really happen in
+        // JTTableViewCellEditingStateMiddle shouldn't really happen in
         // - [JTTableViewGestureDelegate gestureRecognizer:commitEditingState:forRowAtIndexPath:]
     }
     [tableView endUpdates];
