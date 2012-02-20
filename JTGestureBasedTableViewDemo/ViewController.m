@@ -21,6 +21,7 @@
 @synthesize tableViewRecognizer;
 
 #define ADDING_CELL @"Continue..."
+#define DONE_CELL @"Done"
 #define COMMITING_CREATE_CELL_HEIGHT 60
 #define NORMAL_CELL_FINISHING_HEIGHT 60
 
@@ -69,7 +70,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 
     NSObject *object = [self.rows objectAtIndex:indexPath.row];
-    UIColor *backgroundColor = [[UIColor redColor] colorWithHueOffset:(CGFloat)indexPath.row/75];
+    UIColor *backgroundColor = [[UIColor redColor] colorWithHueOffset:0.12 * indexPath.row / [self tableView:tableView numberOfRowsInSection:indexPath.section]];
     if ([object isEqual:ADDING_CELL]) {
         static NSString *cellIdentifier = @"TransformableTableViewCell";
         TransformableTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
@@ -84,11 +85,11 @@
         cell.tintColor = backgroundColor;
 
         cell.finishedHeight = COMMITING_CREATE_CELL_HEIGHT;
-        if (cell.frame.size.height >= COMMITING_CREATE_CELL_HEIGHT) {
+        if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT) {
             cell.textLabel.text = @"Release to create cell...";
             cell.contentView.backgroundColor = cell.tintColor;
         } else {
-            cell.textLabel.text = ADDING_CELL;
+            cell.textLabel.text = (NSString *)object;
             cell.contentView.backgroundColor = [UIColor clearColor];
         }
         cell.detailTextLabel.text = @" ";
@@ -101,14 +102,19 @@
         if (cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
             cell.textLabel.adjustsFontSizeToFitWidth = YES;
-            cell.textLabel.textColor = [UIColor whiteColor];
             cell.textLabel.backgroundColor = [UIColor clearColor];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
 
         cell.textLabel.text = [NSString stringWithFormat:@"%@", (NSString *)object];
         cell.detailTextLabel.text = @" ";
-        cell.contentView.backgroundColor = backgroundColor;
+        if ([object isEqual:DONE_CELL]) {
+            cell.textLabel.textColor = [UIColor grayColor];
+            cell.contentView.backgroundColor = [UIColor darkGrayColor];
+        } else {
+            cell.textLabel.textColor = [UIColor whiteColor];
+            cell.contentView.backgroundColor = backgroundColor;
+        }
         return cell;
     }
 
@@ -124,7 +130,8 @@
     NSLog(@"%@", indexPath);
 }
 
-#pragma mark JTTableViewGestureRecognizer
+#pragma mark -
+#pragma mark JTTableViewGestureRecognizer (Pinch)
 
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsAddRowAtIndexPath:(NSIndexPath *)indexPath {
     [self.rows insertObject:ADDING_CELL atIndex:indexPath.row];
@@ -139,6 +146,57 @@
 
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsDiscardRowAtIndexPath:(NSIndexPath *)indexPath {
     [self.rows removeObjectAtIndex:indexPath.row];
+}
+
+#pragma mark JTTableViewGestureRecognizer (Pan)
+
+- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer didEnterEditingState:(JTTableViewCellEditingState)state forRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+
+    UIColor *backgroundColor = nil;
+    switch (state) {
+        case JTTableViewCellEditingStateMiddle:
+            backgroundColor = [[UIColor redColor] colorWithHueOffset:0.12 * indexPath.row / [self tableView:self.tableView numberOfRowsInSection:indexPath.section]];
+            break;
+        case JTTableViewCellEditingStateRight:
+            backgroundColor = [UIColor greenColor];
+            break;
+        default:
+            backgroundColor = [UIColor darkGrayColor];
+            break;
+    }
+    cell.contentView.backgroundColor = backgroundColor;
+    if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
+        ((TransformableTableViewCell *)cell).tintColor = backgroundColor;
+    }
+}
+
+// This is needed to be implemented to let our delegate choose whether the panning gesture should work
+- (BOOL)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}
+
+- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer commitEditingState:(JTTableViewCellEditingState)state forRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableView *tableView = gestureRecognizer.tableView;
+    [tableView beginUpdates];
+    if (state == JTTableViewCellEditingStateLeft) {
+        // An example to discard the cell at JTTableViewCellEditingStateLeft
+        [self.rows removeObjectAtIndex:indexPath.row];
+        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+    } else if (state == JTTableViewCellEditingStateRight) {
+        // An example to retain the cell at commiting at JTTableViewCellEditingStateRight
+        [self.rows replaceObjectAtIndex:indexPath.row withObject:DONE_CELL];
+        [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+    } else {
+        // JTTableViewCellEditingStateMiddle shouldn't really happen in
+        // - [JTTableViewGestureDelegate gestureRecognizer:commitEditingState:forRowAtIndexPath:]
+    }
+    [tableView endUpdates];
+}
+
+// Optional delegate method to implement for configuration of cell commitEditing length
+- (CGFloat)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer lengthForCommitEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+    return JTTableViewCommitEditingRowDefaultLength;
 }
 
 @end
