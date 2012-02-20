@@ -21,6 +21,7 @@
 @synthesize tableViewRecognizer;
 
 #define ADDING_CELL @"Continue..."
+#define DONE_CELL @"Done"
 #define COMMITING_CREATE_CELL_HEIGHT 60
 #define NORMAL_CELL_FINISHING_HEIGHT 60
 
@@ -101,14 +102,19 @@
         if (cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
             cell.textLabel.adjustsFontSizeToFitWidth = YES;
-            cell.textLabel.textColor = [UIColor whiteColor];
             cell.textLabel.backgroundColor = [UIColor clearColor];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
 
         cell.textLabel.text = [NSString stringWithFormat:@"%@", (NSString *)object];
         cell.detailTextLabel.text = @" ";
-        cell.contentView.backgroundColor = backgroundColor;
+        if ([object isEqual:DONE_CELL]) {
+            cell.textLabel.textColor = [UIColor grayColor];
+            cell.contentView.backgroundColor = [UIColor darkGrayColor];
+        } else {
+            cell.textLabel.textColor = [UIColor whiteColor];
+            cell.contentView.backgroundColor = backgroundColor;
+        }
         return cell;
     }
 
@@ -124,7 +130,8 @@
     NSLog(@"%@", indexPath);
 }
 
-#pragma mark JTTableViewGestureRecognizer
+#pragma mark -
+#pragma mark JTTableViewGestureRecognizer (Pinch)
 
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsAddRowAtIndexPath:(NSIndexPath *)indexPath {
     [self.rows insertObject:ADDING_CELL atIndex:indexPath.row];
@@ -140,6 +147,8 @@
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsDiscardRowAtIndexPath:(NSIndexPath *)indexPath {
     [self.rows removeObjectAtIndex:indexPath.row];
 }
+
+#pragma mark JTTableViewGestureRecognizer (Pan)
 
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer didEnterState:(JTTableViewCellEnterState)state forRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
@@ -165,6 +174,24 @@
 // This is needed to be implemented to let our delegate choose whether the panning gesture should work
 - (BOOL)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     return YES;
+}
+
+- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer commitEditingState:(JTTableViewCellEnterState)state forRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableView *tableView = gestureRecognizer.tableView;
+    [tableView beginUpdates];
+    if (state == JTTableViewCellEnterStateLeft) {
+        // An example to discard the cell at JTTableViewCellEnterStateLeft
+        [self.rows removeObjectAtIndex:indexPath.row];
+        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+    } else if (state == JTTableViewCellEnterStateRight) {
+        // An example to retain the cell at commiting at JTTableViewCellEnterStateRight
+        [self.rows replaceObjectAtIndex:indexPath.row withObject:DONE_CELL];
+        [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+    } else {
+        // JTTableViewCellEnterStateMiddle shouldn't really happen in
+        // - [JTTableViewGestureDelegate gestureRecognizer:commitEditingState:forRowAtIndexPath:]
+    }
+    [tableView endUpdates];
 }
 
 @end

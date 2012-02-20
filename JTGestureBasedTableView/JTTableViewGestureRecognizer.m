@@ -188,17 +188,16 @@ typedef enum {
         UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
         CGPoint translation = [recognizer translationInView:self.tableView];
         if (fabsf(translation.x) >= self.tableView.bounds.size.width / 4) {
-            [self.tableView beginUpdates];
-            UITableViewRowAnimation rowAnimation = translation.x >= 0 ? UITableViewRowAnimationRight : UITableViewRowAnimationLeft;
-            [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:rowAnimation];
-            [self.delegate gestureRecognizer:self needsDiscardRowAtIndexPath:indexPath];
-            [self.tableView endUpdates];
+            if ([self.delegate respondsToSelector:@selector(gestureRecognizer:commitEditingState:forRowAtIndexPath:)]) {
+                [self.delegate gestureRecognizer:self commitEditingState:self.addingCellState forRowAtIndexPath:indexPath];
+            }
         } else {
             [UIView beginAnimations:@"" context:nil];
             cell.contentView.frame = cell.contentView.bounds;
             [UIView commitAnimations];
         }
         
+        self.addingCellState = JTTableViewCellEnterStateMiddle;
         self.state = JTTableViewGestureRecognizerStateNone;
     }
 }
