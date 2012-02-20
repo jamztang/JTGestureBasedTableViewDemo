@@ -167,12 +167,13 @@ typedef enum {
             if (self.addingCellState == JTTableViewCellEnterStateMiddle) {
                 self.addingCellState = translation.x > 0 ? JTTableViewCellEnterStateRight : JTTableViewCellEnterStateLeft;
             }
-
-            [self.delegate gestureRecognizer:self didEnterState:self.addingCellState forRowAtIndexPath:indexPath];
         } else {
             if (self.addingCellState != JTTableViewCellEnterStateMiddle) {
                 self.addingCellState = JTTableViewCellEnterStateMiddle;
             }
+        }
+
+        if ([self.delegate respondsToSelector:@selector(gestureRecognizer:didEnterState:forRowAtIndexPath:)]) {
             [self.delegate gestureRecognizer:self didEnterState:self.addingCellState forRowAtIndexPath:indexPath];
         }
 
@@ -211,16 +212,21 @@ typedef enum {
         
         CGPoint point = [pan translationInView:self.tableView];
         CGPoint location = [pan locationInView:self.tableView];
+        NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:location];
 
         // The pan gesture recognizer will fail the original scrollView scroll
         // gesture, we wants to ensure we are panning left/right to enable the
         // pan gesture.
         if (fabsf(point.y) > fabsf(point.x)) {
             return NO;
-        } else if ([self.tableView indexPathForRowAtPoint:location] == nil) {
+        } else if (indexPath == nil) {
             return NO;
-        } else {
-            return YES;
+        } else if (indexPath) {
+            BOOL canEditRow = NO;
+            if ([self.delegate respondsToSelector:@selector(gestureRecognizer:canEditRowAtIndexPath:)]) {
+                canEditRow = [self.delegate gestureRecognizer:self canEditRowAtIndexPath:indexPath];
+            }
+            return canEditRow;
         }
     }
     return YES;

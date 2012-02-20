@@ -158,4 +158,9 @@
     }
 }
 
+// This is needed to be implemented to let our delegate choose whether the panning gesture should work
+- (BOOL)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}
+
 @end
