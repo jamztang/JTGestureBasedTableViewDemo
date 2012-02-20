@@ -55,9 +55,16 @@
     [self.textLabel.layer setTransform:transform];
     [self.detailTextLabel.layer setTransform:CATransform3DMakeRotation((M_PI / 2) - asinf(fraction), 1, 0, 0)];
 
-    self.textLabel.backgroundColor = [self.tintColor colorWithBrightness:0.3 + 0.7*fraction];
-    self.detailTextLabel.backgroundColor = [self.tintColor colorWithBrightness:0.5 + 0.5*fraction];
-    
+
+    if (fraction == 1) {
+        self.textLabel.backgroundColor       = [UIColor clearColor];
+        self.detailTextLabel.backgroundColor = [UIColor clearColor];
+        self.contentView.backgroundColor     = self.tintColor;
+    } else {
+        self.textLabel.backgroundColor       = [self.tintColor colorWithBrightness:0.3 + 0.7*fraction];
+        self.detailTextLabel.backgroundColor = [self.tintColor colorWithBrightness:0.5 + 0.5*fraction];
+        self.contentView.backgroundColor     = [UIColor clearColor];
+    }
 
     fraction = 1 / fraction;
 

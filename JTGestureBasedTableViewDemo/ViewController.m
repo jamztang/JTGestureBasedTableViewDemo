@@ -143,18 +143,22 @@
 
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer didEnterState:(JTTableViewCellEnterState)state forRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-    
-    UIColor *backgroundColor = [[UIColor redColor] colorWithHueOffset:0.12 * indexPath.row / [self tableView:self.tableView numberOfRowsInSection:indexPath.section]];
+
+    UIColor *backgroundColor = nil;
     switch (state) {
         case JTTableViewCellEnterStateMiddle:
-            cell.contentView.backgroundColor = backgroundColor;
+            backgroundColor = [[UIColor redColor] colorWithHueOffset:0.12 * indexPath.row / [self tableView:self.tableView numberOfRowsInSection:indexPath.section]];
             break;
         case JTTableViewCellEnterStateRight:
-            cell.contentView.backgroundColor = [UIColor greenColor];
+            backgroundColor = [UIColor greenColor];
             break;
         default:
-            cell.contentView.backgroundColor = [UIColor darkGrayColor];
+            backgroundColor = [UIColor darkGrayColor];
             break;
+    }
+    cell.contentView.backgroundColor = backgroundColor;
+    if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
+        ((TransformableTableViewCell *)cell).tintColor = backgroundColor;
     }
 }
 
