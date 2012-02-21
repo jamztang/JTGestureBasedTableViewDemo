@@ -55,24 +55,16 @@
     [self.textLabel.layer setTransform:transform];
     [self.detailTextLabel.layer setTransform:CATransform3DMakeRotation((M_PI / 2) - asinf(fraction), 1, 0, 0)];
 
+    self.textLabel.backgroundColor       = [self.tintColor colorWithBrightness:0.3 + 0.7*fraction];
+    self.detailTextLabel.backgroundColor = [self.tintColor colorWithBrightness:0.5 + 0.5*fraction];
 
-    if (fraction == 1) {
-        self.textLabel.backgroundColor       = [UIColor clearColor];
-        self.detailTextLabel.backgroundColor = [UIColor clearColor];
-        self.contentView.backgroundColor     = self.tintColor;
-    } else {
-        self.textLabel.backgroundColor       = [self.tintColor colorWithBrightness:0.3 + 0.7*fraction];
-        self.detailTextLabel.backgroundColor = [self.tintColor colorWithBrightness:0.5 + 0.5*fraction];
-        self.contentView.backgroundColor     = [UIColor clearColor];
-    }
-
-    fraction = 1 / fraction;
-
-    CGFloat labelHeight = ceilf(self.contentView.frame.size.height/2*fraction);
-    labelHeight = MIN(MAX(1, labelHeight), 800);
-    
-    self.textLabel.frame = CGRectMake(0, 0, self.contentView.frame.size.width, labelHeight);
-    self.detailTextLabel.frame = CGRectMake(0,self.contentView.frame.size.height - labelHeight, self.contentView.frame.size.width, labelHeight);
+    CGSize contentViewSize = self.contentView.frame.size;
+    CGFloat contentViewMidY = (int)(contentViewSize.height / 2 + 0.5);
+    CGFloat labelHeight = ceilf(self.finishedHeight / 2);
+    self.textLabel.frame = CGRectMake(0, contentViewMidY - floorf(labelHeight * fraction),
+                                      contentViewSize.width, labelHeight);
+    self.detailTextLabel.frame = CGRectMake(0, contentViewMidY - ceilf(labelHeight * (1 - fraction)),
+                                            contentViewSize.width, labelHeight);
 }
 
 @end

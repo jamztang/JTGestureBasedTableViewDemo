@@ -36,7 +36,7 @@
                      @"Swipe to the right to complete",
                      @"Swipe to left to delete",
                      @"Drag down to create a new cell",
-                     @"Pinch between any cell to create a new one",
+                     @"Pinch two rows apart to create cell",
                      nil];
     }
     return self;
@@ -86,11 +86,10 @@
         cell.finishedHeight = COMMITING_CREATE_CELL_HEIGHT;
         if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT) {
             cell.textLabel.text = @"Release to create cell...";
-            cell.contentView.backgroundColor = cell.tintColor;
         } else {
             cell.textLabel.text = (NSString *)object;
-            cell.contentView.backgroundColor = [UIColor clearColor];
         }
+        cell.contentView.backgroundColor = [UIColor clearColor];
         cell.detailTextLabel.text = @" ";
         return cell;
     
