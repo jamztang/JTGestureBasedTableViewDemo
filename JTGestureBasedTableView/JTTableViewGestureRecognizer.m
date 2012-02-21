@@ -18,8 +18,8 @@ typedef enum {
 CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
 
 @interface JTTableViewGestureRecognizer () <UIGestureRecognizerDelegate>
-@property (nonatomic, assign) id <JTTableViewGestureDelegate> delegate;
-@property (nonatomic, assign) id <UITableViewDelegate>        tableViewDelegate;
+@property (nonatomic, assign) id <JTTableViewGestureAddingRowDelegate, JTTableViewGestureEditingRowDelegate> delegate;
+@property (nonatomic, assign) id <UITableViewDelegate>   tableViewDelegate;
 @property (nonatomic, assign) UITableView               *tableView;
 @property (nonatomic, assign) CGFloat                    addingRowHeight;
 @property (nonatomic, retain) NSIndexPath               *addingIndexPath;
@@ -217,6 +217,10 @@ CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
 
     if (gestureRecognizer == self.panRecognizer) {
+        if ( ! [self.delegate conformsToProtocol:@protocol(JTTableViewGestureEditingRowDelegate)]) {
+            return NO;
+        }
+        
         UIPanGestureRecognizer *pan = (UIPanGestureRecognizer *)gestureRecognizer;
         
         CGPoint point = [pan translationInView:self.tableView];
@@ -231,11 +235,13 @@ CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
         } else if (indexPath == nil) {
             return NO;
         } else if (indexPath) {
-            BOOL canEditRow = NO;
-            if ([self.delegate respondsToSelector:@selector(gestureRecognizer:canEditRowAtIndexPath:)]) {
-                canEditRow = [self.delegate gestureRecognizer:self canEditRowAtIndexPath:indexPath];
-            }
+            BOOL canEditRow = [self.delegate gestureRecognizer:self canEditRowAtIndexPath:indexPath];
             return canEditRow;
+        }
+    } else if (gestureRecognizer == self.pinchRecognizer) {
+        if ( ! [self.delegate conformsToProtocol:@protocol(JTTableViewGestureAddingRowDelegate)]) {
+            NSLog(@"Should not begin pinch");
+            return NO;
         }
     }
     return YES;
@@ -258,6 +264,13 @@ CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
 #pragma mark UIScrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if ( ! [self.delegate conformsToProtocol:@protocol(JTTableViewGestureAddingRowDelegate)]) {
+        if ([self.tableViewDelegate respondsToSelector:@selector(scrollViewDidScroll:)]) {
+            [self.tableViewDelegate scrollViewDidScroll:scrollView];
+        }
+        return;
+    }
+
     // We try to create a new cell when the user tries to drag the content to and offset of negative value
     if (scrollView.contentOffset.y < 0) {
         // Here we make sure we're not conflicting with the pinch event,
@@ -289,6 +302,13 @@ CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    if ( ! [self.delegate conformsToProtocol:@protocol(JTTableViewGestureAddingRowDelegate)]) {
+        if ([self.tableViewDelegate respondsToSelector:@selector(scrollViewDidEndDragging:willDecelerate:)]) {
+            [self.tableViewDelegate scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
+        }
+        return;
+    }
+
     if (self.state == JTTableViewGestureRecognizerStateDragging) {
         self.state = JTTableViewGestureRecognizerStateNone;
         [self commitOrDiscardCell];
@@ -315,20 +335,21 @@ CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
 
 #pragma mark Class method
 
-+ (JTTableViewGestureRecognizer *)gestureRecognizerWithTableView:(UITableView *)tableView delegate:(id<JTTableViewGestureDelegate>)delegate {
++ (JTTableViewGestureRecognizer *)gestureRecognizerWithTableView:(UITableView *)tableView delegate:(id)delegate {
     JTTableViewGestureRecognizer *recognizer = [[JTTableViewGestureRecognizer alloc] init];
-    recognizer.delegate             = delegate;
+    recognizer.delegate             = (id)delegate;
     recognizer.tableView            = tableView;
     recognizer.tableViewDelegate    = tableView.delegate;     // Assign the delegate before chaning the tableView's delegate
     tableView.delegate              = recognizer;
     
     UIPinchGestureRecognizer *pinch = [[UIPinchGestureRecognizer alloc] initWithTarget:recognizer action:@selector(pinchGestureRecognizer:)];
     [tableView addGestureRecognizer:pinch];
+    pinch.delegate             = recognizer;
     recognizer.pinchRecognizer = pinch;
 
     UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:recognizer action:@selector(panGestureRecognizer:)];
     [tableView addGestureRecognizer:pan];
-    pan.delegate = recognizer;
+    pan.delegate             = recognizer;
     recognizer.panRecognizer = pan;
 
     return recognizer;
@@ -339,7 +360,10 @@ CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
 
 @implementation UITableView (JTTableViewGestureDelegate)
 
-- (JTTableViewGestureRecognizer *)enableGestureTableViewWithDelegate:(id <JTTableViewGestureDelegate>)delegate {
+- (JTTableViewGestureRecognizer *)enableGestureTableViewWithDelegate:(id)delegate {
+    if ( ! [delegate conformsToProtocol:@protocol(JTTableViewGestureAddingRowDelegate)] && ! [delegate conformsToProtocol:@protocol(JTTableViewGestureEditingRowDelegate)]) {
+        [NSException raise:@"delegate should at least conform to one of JTTableViewGestureAddingRowDelegate or JTTableViewGestureEditingRowDelegate" format:nil];
+    }
     JTTableViewGestureRecognizer *recognizer = [JTTableViewGestureRecognizer gestureRecognizerWithTableView:self delegate:delegate];
     return recognizer;
 }

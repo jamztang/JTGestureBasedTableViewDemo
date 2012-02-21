@@ -16,18 +16,25 @@ typedef enum {
 
 extern CGFloat const JTTableViewCommitEditingRowDefaultLength;
 
-@protocol JTTableViewGestureDelegate;
+@protocol JTTableViewGestureAddingRowDelegate;
+@protocol JTTableViewGestureEditingRowDelegate;
+
 
 @interface JTTableViewGestureRecognizer : NSObject <UITableViewDelegate>
 
 @property (nonatomic, assign, readonly) UITableView *tableView;
 
-+ (JTTableViewGestureRecognizer *)gestureRecognizerWithTableView:(UITableView *)tableView delegate:(id <JTTableViewGestureDelegate>)delegate;
++ (JTTableViewGestureRecognizer *)gestureRecognizerWithTableView:(UITableView *)tableView delegate:(id)delegate;
 
 @end
 
 
-@protocol JTTableViewGestureDelegate <NSObject, UITableViewDelegate>
+#pragma mark -
+
+// Conform to JTTableViewGestureAddingRowDelegate to enable features
+// - drag down to add cell
+// - pinch to add cell
+@protocol JTTableViewGestureAddingRowDelegate <NSObject>
 
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsAddRowAtIndexPath:(NSIndexPath *)indexPath;
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsCommitRowAtIndexPath:(NSIndexPath *)indexPath;
@@ -38,11 +45,20 @@ extern CGFloat const JTTableViewCommitEditingRowDefaultLength;
 - (NSIndexPath *)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer willCreateCellAtIndexPath:(NSIndexPath *)indexPath;
 - (CGFloat)heightForCommittingRowForGestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer;
 
+@end
+
+
+// Conform to JTTableViewGestureEditingRowDelegate to enable features
+// - swipe to edit cell
+@protocol JTTableViewGestureEditingRowDelegate <NSObject>
+
 // Panning (required)
 - (BOOL)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer canEditRowAtIndexPath:(NSIndexPath *)indexPath;
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer didEnterEditingState:(JTTableViewCellEditingState)state forRowAtIndexPath:(NSIndexPath *)indexPath;
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer commitEditingState:(JTTableViewCellEditingState)state forRowAtIndexPath:(NSIndexPath *)indexPath;
-// Panning (optional configuration)
+
+@optional
+
 - (CGFloat)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer lengthForCommitEditingRowAtIndexPath:(NSIndexPath *)indexPath;
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer didChangeContentViewTranslation:(CGPoint)translation forRowAtIndexPath:(NSIndexPath *)indexPath;
 
@@ -54,6 +70,6 @@ extern CGFloat const JTTableViewCommitEditingRowDefaultLength;
 
 @interface UITableView (JTTableViewGestureDelegate)
 
-- (JTTableViewGestureRecognizer *)enableGestureTableViewWithDelegate:(id <JTTableViewGestureDelegate>)delegate;
+- (JTTableViewGestureRecognizer *)enableGestureTableViewWithDelegate:(id)delegate;
 
 @end

@@ -11,7 +11,9 @@
 #import "JTTableViewGestureRecognizer.h"
 #import "UIColor+JTGestureBasedTableViewHelper.h"
 
-@interface ViewController () <JTTableViewGestureDelegate>
+// Configure your viewController to conform to JTTableViewGestureEditingRowDelegate
+// and/or JTTableViewGestureAddingRowDelegate depends on your needs
+@interface ViewController () <JTTableViewGestureEditingRowDelegate, JTTableViewGestureAddingRowDelegate>
 @property (nonatomic, strong) NSMutableArray *rows;
 @property (nonatomic, strong) JTTableViewGestureRecognizer *tableViewRecognizer;
 @end
@@ -44,9 +46,9 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    
-    // Setup your tableView.delegate and tableView.datasource first, then enable gesture
-    // recognition in one line.
+
+    // Setup your tableView.delegate and tableView.datasource,
+    // then enable gesture recognition in one line.
     self.tableViewRecognizer = [self.tableView enableGestureTableViewWithDelegate:self];
     
     self.tableView.backgroundColor = [UIColor blackColor];
@@ -124,11 +126,11 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"%@", indexPath);
+    NSLog(@"tableView:didSelectRowAtIndexPath: %@", indexPath);
 }
 
 #pragma mark -
-#pragma mark JTTableViewGestureRecognizer (Pinch)
+#pragma mark JTTableViewGestureAddingRowDelegate
 
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsAddRowAtIndexPath:(NSIndexPath *)indexPath {
     [self.rows insertObject:ADDING_CELL atIndex:indexPath.row];
@@ -145,7 +147,7 @@
     [self.rows removeObjectAtIndex:indexPath.row];
 }
 
-#pragma mark JTTableViewGestureRecognizer (Pan)
+#pragma mark JTTableViewGestureEditingRowDelegate
 
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer didEnterEditingState:(JTTableViewCellEditingState)state forRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
@@ -189,11 +191,6 @@
         // - [JTTableViewGestureDelegate gestureRecognizer:commitEditingState:forRowAtIndexPath:]
     }
     [tableView endUpdates];
-}
-
-// Optional delegate method to implement for configuration of cell commitEditing length
-- (CGFloat)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer lengthForCommitEditingRowAtIndexPath:(NSIndexPath *)indexPath {
-    return JTTableViewCommitEditingRowDefaultLength;
 }
 
 @end

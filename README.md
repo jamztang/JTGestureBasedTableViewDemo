@@ -17,9 +17,9 @@ Clear for iPhone app has showed us so much we can do with a buttonless interface
 Demo
 ----
 
-<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo1.png width=320></img> 
-<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo2.png width=320></img>
-<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo3.png width=320></img>
+<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo1.png width=280 style="border: 1px solid white;"></img>
+<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo2.png width=280 style="border: 1px solid white;"></img>
+<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo3.png width=280 style="border: 1px solid white;"></img>
 
 
 Features
@@ -44,7 +44,7 @@ Include all header and implementation files in JTGestureBasedTabeView/ into your
 
     #import "JTTableViewGestureRecognizer.h"
     
-    @interface ViewController () <JTTableViewGestureDelegate>
+    @interface ViewController () <JTTableViewGestureAddingRowDelegate, JTTableViewGestureEditingRowDelegate>
     @property (nonatomic, strong) NSMutableArray *rows;
     @property (nonatomic, strong) JTTableViewGestureRecognizer *tableViewRecognizer;
     @end
@@ -60,31 +60,53 @@ Include all header and implementation files in JTGestureBasedTabeView/ into your
         // In our examples, we setup self.rows as datasource
         self.rows = ...;
         
-        // Setup your tableView.delegate and tableView.datasource first, then enable gesture
-        // recognition in one line.
+        // Setup your tableView.delegate and tableView.datasource,
+        // then enable gesture recognition in one line.
         self.tableViewRecognizer = [self.tableView enableGestureTableViewWithDelegate:self];
     }
 
 
-### Implement the JTTableViewGestureDelegate, and also those official UITableViewDatasource @required methods
+### Enabling adding cell gestures
 
-    #pragma mark JTTableViewGestureRecognizer
-    
-    - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsAddRowAtIndexPath:(NSIndexPath *)indexPath {
-        [self.rows insertObject:ADDING_CELL atIndex:indexPath.row];
-    }
-    
-    - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsCommitRowAtIndexPath:(NSIndexPath *)indexPath {
-        [self.rows replaceObjectAtIndex:indexPath.row withObject:@"Added!"];
-        UITableViewCell *cell = (id)[gestureRecognizer.tableView cellForRowAtIndexPath:indexPath];
-        cell.textLabel.text = @"Just Added!";
-    }
-    
-    - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsDiscardRowAtIndexPath:(NSIndexPath *)indexPath {
-        [self.rows removeObjectAtIndex:indexPath.row];
-    }
+    // Conform to JTTableViewGestureAddingRowDelegate to enable features
+    // - drag down to add cell
+    // - pinch to add cell
+    @protocol JTTableViewGestureAddingRowDelegate <NSObject>
+
+    - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsAddRowAtIndexPath:(NSIndexPath *)indexPath;
+    - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsCommitRowAtIndexPath:(NSIndexPath *)indexPath;
+    - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsDiscardRowAtIndexPath:(NSIndexPath *)indexPath;
+
+    @optional
+
+    - (NSIndexPath *)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer willCreateCellAtIndexPath:(NSIndexPath *)indexPath;
+    - (CGFloat)heightForCommittingRowForGestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer;
+
+    @end
 
 
+### Enabling editing cell gestures
+
+    // Conform to JTTableViewGestureEditingRowDelegate to enable features
+    // - swipe to edit cell
+    @protocol JTTableViewGestureEditingRowDelegate <NSObject>
+
+    // Panning (required)
+    - (BOOL)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer canEditRowAtIndexPath:(NSIndexPath *)indexPath;
+    - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer didEnterEditingState:(JTTableViewCellEditingState)state forRowAtIndexPath:(NSIndexPath *)indexPath;
+    - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer commitEditingState:(JTTableViewCellEditingState)state forRowAtIndexPath:(NSIndexPath *)indexPath;
+
+    @optional
+
+    - (CGFloat)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer lengthForCommitEditingRowAtIndexPath:(NSIndexPath *)indexPath;
+    - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer didChangeContentViewTranslation:(CGPoint)translation forRowAtIndexPath:(NSIndexPath *)indexPath;
+
+    @end
+
+
+### You choose what to enable
+
+You can pick what gestures to be enabled by conforming to the appropriate protocols.
 Don't forget to look at JTGestureBasedTableViewDemo/ViewController.m for a complete working usage.
 
 
