@@ -53,17 +53,20 @@
     CGFloat angle = (M_PI / 2) - asinf(fraction);
     CATransform3D transform = CATransform3DMakeRotation(angle, -1, 0, 0);
     [self.textLabel.layer setTransform:transform];
-    [self.detailTextLabel.layer setTransform:CATransform3DMakeRotation((M_PI / 2) - asinf(fraction), 1, 0, 0)];
+    [self.detailTextLabel.layer setTransform:CATransform3DMakeRotation(angle, 1, 0, 0)];
 
     self.textLabel.backgroundColor       = [self.tintColor colorWithBrightness:0.3 + 0.7*fraction];
     self.detailTextLabel.backgroundColor = [self.tintColor colorWithBrightness:0.5 + 0.5*fraction];
 
     CGSize contentViewSize = self.contentView.frame.size;
-    CGFloat contentViewMidY = (int)(contentViewSize.height / 2 + 0.5);
-    CGFloat labelHeight = ceilf(self.finishedHeight / 2);
-    self.textLabel.frame = CGRectMake(0, contentViewMidY - floorf(labelHeight * fraction),
-                                      contentViewSize.width, labelHeight);
-    self.detailTextLabel.frame = CGRectMake(0, contentViewMidY - ceilf(labelHeight * (1 - fraction)),
+    CGFloat contentViewMidY = contentViewSize.height / 2;
+    CGFloat labelHeight = self.finishedHeight / 2;
+
+    // OPTI: Always accomodate 1 px to the top label to ensure two labels 
+    // won't display one px gap in between sometimes for certain angles 
+    self.textLabel.frame = CGRectMake(0, contentViewMidY - (labelHeight * fraction),
+                                      contentViewSize.width, labelHeight + 1);
+    self.detailTextLabel.frame = CGRectMake(0, contentViewMidY - (labelHeight * (1 - fraction)),
                                             contentViewSize.width, labelHeight);
 }
 
