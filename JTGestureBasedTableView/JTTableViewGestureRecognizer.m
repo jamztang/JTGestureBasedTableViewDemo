@@ -7,6 +7,7 @@
  */
 
 #import "JTTableViewGestureRecognizer.h"
+#import <QuartzCore/QuartzCore.h>
 
 typedef enum {
     JTTableViewGestureRecognizerStateNone,
@@ -18,7 +19,7 @@ typedef enum {
 CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
 
 @interface JTTableViewGestureRecognizer () <UIGestureRecognizerDelegate>
-@property (nonatomic, assign) id <JTTableViewGestureAddingRowDelegate, JTTableViewGestureEditingRowDelegate> delegate;
+@property (nonatomic, assign) id <JTTableViewGestureAddingRowDelegate, JTTableViewGestureEditingRowDelegate, JTTableViewGestureMoveRowDelegate> delegate;
 @property (nonatomic, assign) id <UITableViewDelegate>   tableViewDelegate;
 @property (nonatomic, assign) UITableView               *tableView;
 @property (nonatomic, assign) CGFloat                    addingRowHeight;
@@ -27,17 +28,22 @@ CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
 @property (nonatomic, assign) CGPoint                    startPinchingUpperPoint;
 @property (nonatomic, retain) UIPinchGestureRecognizer  *pinchRecognizer;
 @property (nonatomic, retain) UIPanGestureRecognizer    *panRecognizer;
+@property (nonatomic, retain) UILongPressGestureRecognizer    *longPressRecognizer;
 @property (nonatomic, assign) JTTableViewGestureRecognizerState state;
+@property (nonatomic, retain) UIImage                   *cellSnapshot;
 
 - (void)commitOrDiscardCell;
 
 @end
 
+#define CELL_SNAPSHOT_TAG 100000
+
 @implementation JTTableViewGestureRecognizer
 @synthesize delegate, tableView, tableViewDelegate;
 @synthesize addingIndexPath, startPinchingUpperPoint, addingRowHeight;
-@synthesize pinchRecognizer, panRecognizer;
+@synthesize pinchRecognizer, panRecognizer, longPressRecognizer;
 @synthesize state, addingCellState;
+@synthesize cellSnapshot;
 
 #pragma mark Logic
 
@@ -213,6 +219,88 @@ CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
     }
 }
 
+- (void)longPressGestureRecognizer:(UILongPressGestureRecognizer *)recognizer {
+    
+#warning Better to update self.state
+    CGPoint location = [recognizer locationInView:self.tableView];
+    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:location];
+
+    if (recognizer.state == UIGestureRecognizerStateBegan) {
+        NSLog(@"BEGIN %@", recognizer);
+
+        UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+        UIGraphicsBeginImageContextWithOptions(cell.bounds.size, NO, 0);
+        [cell.layer renderInContext:UIGraphicsGetCurrentContext()];
+        UIImage *cellImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+
+        // We create an imageView for caching the cell snapshot here
+        UIImageView *snapShotView = (UIImageView *)[self.tableView viewWithTag:CELL_SNAPSHOT_TAG];
+        if ( ! snapShotView) {
+            snapShotView = [[UIImageView alloc] initWithImage:cellImage];
+            snapShotView.tag = CELL_SNAPSHOT_TAG;
+            [self.tableView addSubview:snapShotView];
+            snapShotView.alpha = 0.85;
+            snapShotView.transform = CGAffineTransformMakeScale(1.1, 1.1);
+        }
+        snapShotView.center = CGPointMake(self.tableView.center.x, location.y);
+        
+        [self.tableView beginUpdates];
+        [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        [self.delegate gestureRecognizer:self needsCreatePlaceholderForRowAtIndexPath:indexPath];
+        
+        self.addingIndexPath = indexPath;
+
+        CGFloat rowHeight = self.tableView.rowHeight;
+        if ([self.delegate respondsToSelector:@selector(gestureRecognizer:heightForPlaceholderForRowAtIndexPath:)]) {
+            rowHeight = [self.delegate gestureRecognizer:self heightForPlaceholderForRowAtIndexPath:indexPath];
+        }
+        self.addingRowHeight = rowHeight;
+        [self.tableView endUpdates];
+        
+
+    } else if (recognizer.state == UIGestureRecognizerStateEnded) {
+#warning Needed to fix crash while releasing hold on point which doesn't contains cell
+        NSLog(@"END %@", recognizer);
+        
+        // While long press ends, we remove the snapshot imageView
+        UIImageView *snapShotView = (UIImageView *)[self.tableView viewWithTag:CELL_SNAPSHOT_TAG];
+        [snapShotView removeFromSuperview];
+        self.cellSnapshot = nil;
+
+
+        self.addingIndexPath = indexPath;
+
+        [self.tableView beginUpdates];
+        [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        [self.delegate gestureRecognizer:self needsReplacePlaceholderForRowAtIndexPath:indexPath];
+        [self.tableView endUpdates];
+        
+        self.addingIndexPath = nil;
+
+    } else if (recognizer.state == UIGestureRecognizerStateChanged) {
+//        NSLog(@"CHANGED %@", recognizer);
+
+        // While our finger moves, we also moves the snapshot imageView
+        UIImageView *snapShotView = (UIImageView *)[self.tableView viewWithTag:CELL_SNAPSHOT_TAG];
+        snapShotView.center = CGPointMake(self.tableView.center.x, location.y);
+
+        if (indexPath && ! [indexPath isEqual:self.addingIndexPath]) {
+            [self.tableView beginUpdates];
+            [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:self.addingIndexPath] withRowAnimation:UITableViewRowAnimationNone];
+            [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
+            [self.delegate gestureRecognizer:self needsMoveRowAtIndexPath:self.addingIndexPath toIndexPath:indexPath];
+
+            self.addingIndexPath = indexPath;
+
+            [self.tableView endUpdates];
+        }
+
+    }
+}
+
 #pragma mark UIGestureRecognizer
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
@@ -244,6 +332,16 @@ CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
             NSLog(@"Should not begin pinch");
             return NO;
         }
+    } else if (gestureRecognizer == self.longPressRecognizer) {
+        
+        CGPoint location = [gestureRecognizer locationInView:self.tableView];
+        NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:location];
+
+        if ([self.delegate conformsToProtocol:@protocol(JTTableViewGestureMoveRowDelegate)]) {
+            BOOL canMoveRow = [self.delegate gestureRecognizer:self canMoveRowAtIndexPath:indexPath];
+            return canMoveRow;
+        }
+        return NO;
     }
     return YES;
 }
@@ -352,6 +450,11 @@ CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
     [tableView addGestureRecognizer:pan];
     pan.delegate             = recognizer;
     recognizer.panRecognizer = pan;
+    
+    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:recognizer action:@selector(longPressGestureRecognizer:)];
+    [tableView addGestureRecognizer:longPress];
+    longPress.delegate              = recognizer;
+    recognizer.longPressRecognizer  = longPress;
 
     return recognizer;
 }
