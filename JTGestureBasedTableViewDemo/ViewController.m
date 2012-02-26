@@ -31,13 +31,6 @@
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
-        // In this example, we setup self.rows as datasource
-        self.rows = [NSMutableArray arrayWithObjects:
-                     @"Swipe to the right to complete",
-                     @"Swipe to left to delete",
-                     @"Drag down to create a new cell",
-                     @"Pinch two rows apart to create cell",
-                     nil];
     }
     return self;
 }
@@ -45,7 +38,14 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+    // In this example, we setup self.rows as datasource
+    self.rows = [NSMutableArray arrayWithObjects:
+                 @"Swipe to the right to complete",
+                 @"Swipe to left to delete",
+                 @"Drag down to create a new cell",
+                 @"Pinch two rows apart to create cell",
+                 nil];
+
 
     // Setup your tableView.delegate and tableView.datasource,
     // then enable gesture recognition in one line.
