@@ -43,7 +43,11 @@ extern CGFloat const JTTableViewCommitEditingRowDefaultLength;
 @optional
 
 - (NSIndexPath *)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer willCreateCellAtIndexPath:(NSIndexPath *)indexPath;
-- (CGFloat)heightForCommittingRowForGestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer;
+- (CGFloat)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer heightForCommittingRowAtIndexPath:(NSIndexPath *)indexPath;
+
+
+// Depreciated.
+- (CGFloat)heightForCommittingRowForGestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer __deprecated;  // please use - [JTTableViewGestureAddingRowDelegate gestureRecognizer:heightForCommitRowAtIndexPath:]
 
 @end
 

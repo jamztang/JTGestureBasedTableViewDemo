@@ -47,8 +47,9 @@ CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
     
     
     CGFloat commitingCellHeight = self.tableView.rowHeight;
-    if ([self.delegate respondsToSelector:@selector(heightForCommittingRowForGestureRecognizer:)]) {
-        commitingCellHeight = [self.delegate heightForCommittingRowForGestureRecognizer:self];
+    if ([self.delegate respondsToSelector:@selector(gestureRecognizer:heightForCommittingRowAtIndexPath:)]) {
+        commitingCellHeight = [self.delegate gestureRecognizer:self
+                                 heightForCommittingRowAtIndexPath:self.addingIndexPath];
     }
     
     if (cell.frame.size.height >= commitingCellHeight) {
