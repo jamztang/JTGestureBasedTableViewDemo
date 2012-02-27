@@ -255,11 +255,6 @@ CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
         
         self.addingIndexPath = indexPath;
 
-        CGFloat rowHeight = self.tableView.rowHeight;
-        if ([self.delegate respondsToSelector:@selector(gestureRecognizer:heightForPlaceholderForRowAtIndexPath:)]) {
-            rowHeight = [self.delegate gestureRecognizer:self heightForPlaceholderForRowAtIndexPath:indexPath];
-        }
-        self.addingRowHeight = rowHeight;
         [self.tableView endUpdates];
         
 
@@ -361,7 +356,10 @@ CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
 #pragma mark UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)aTableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([indexPath isEqual:self.addingIndexPath]) {
+    if ([indexPath isEqual:self.addingIndexPath]
+        && (self.state == JTTableViewGestureRecognizerStatePinching || self.state == JTTableViewGestureRecognizerStateDragging)) {
+        // While state is in pinching or dragging mode, we intercept the row height
+        // For Moving state, we leave our real delegate to determine the actual height
         return MAX(1, self.addingRowHeight);
     }
     

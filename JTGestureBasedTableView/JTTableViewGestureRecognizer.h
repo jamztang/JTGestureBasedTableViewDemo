@@ -79,9 +79,6 @@ extern CGFloat const JTTableViewCommitEditingRowDefaultLength;
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsMoveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath;
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsReplacePlaceholderForRowAtIndexPath:(NSIndexPath *)indexPath;
 
-@optional
-- (CGFloat)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer heightForPlaceholderForRowAtIndexPath:(NSIndexPath *)indexPath;
-
 @end
 
 
