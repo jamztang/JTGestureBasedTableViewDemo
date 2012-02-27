@@ -14,6 +14,7 @@ typedef enum {
     JTTableViewGestureRecognizerStateDragging,
     JTTableViewGestureRecognizerStatePinching,
     JTTableViewGestureRecognizerStatePanning,
+    JTTableViewGestureRecognizerStateMoving,
 } JTTableViewGestureRecognizerState;
 
 CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
@@ -220,14 +221,12 @@ CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
 }
 
 - (void)longPressGestureRecognizer:(UILongPressGestureRecognizer *)recognizer {
-    
-#warning Better to update self.state
     CGPoint location = [recognizer locationInView:self.tableView];
     NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:location];
 
     if (recognizer.state == UIGestureRecognizerStateBegan) {
-        NSLog(@"BEGIN %@", recognizer);
-
+        self.state = JTTableViewGestureRecognizerStateMoving;
+        
         UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
         UIGraphicsBeginImageContextWithOptions(cell.bounds.size, NO, 0);
         [cell.layer renderInContext:UIGraphicsGetCurrentContext()];
@@ -240,11 +239,15 @@ CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
             snapShotView = [[UIImageView alloc] initWithImage:cellImage];
             snapShotView.tag = CELL_SNAPSHOT_TAG;
             [self.tableView addSubview:snapShotView];
-            snapShotView.alpha = 0.85;
-            snapShotView.transform = CGAffineTransformMakeScale(1.1, 1.1);
+            CGRect rect = [self.tableView rectForRowAtIndexPath:indexPath];
+            snapShotView.frame = CGRectOffset(snapShotView.bounds, rect.origin.x, rect.origin.y);
         }
+        // Make a zoom in effect for the cell
+        [UIView beginAnimations:@"zoomCell" context:nil];
+        snapShotView.transform = CGAffineTransformMakeScale(1.1, 1.1);
         snapShotView.center = CGPointMake(self.tableView.center.x, location.y);
-        
+        [UIView commitAnimations];
+
         [self.tableView beginUpdates];
         [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
         [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
@@ -261,28 +264,37 @@ CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
         
 
     } else if (recognizer.state == UIGestureRecognizerStateEnded) {
-#warning Needed to fix crash while releasing hold on point which doesn't contains cell
-        NSLog(@"END %@", recognizer);
-        
         // While long press ends, we remove the snapshot imageView
-        UIImageView *snapShotView = (UIImageView *)[self.tableView viewWithTag:CELL_SNAPSHOT_TAG];
-        [snapShotView removeFromSuperview];
-        self.cellSnapshot = nil;
-
-
-        self.addingIndexPath = indexPath;
-
-        [self.tableView beginUpdates];
-        [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
-        [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
-        [self.delegate gestureRecognizer:self needsReplacePlaceholderForRowAtIndexPath:indexPath];
-        [self.tableView endUpdates];
         
-        self.addingIndexPath = nil;
+        __block UIImageView *snapShotView = (UIImageView *)[self.tableView viewWithTag:CELL_SNAPSHOT_TAG];
+        __block JTTableViewGestureRecognizer *weakSelf = self;
+        
+        // We use self.addingIndexPath directly to make sure we dropped on a valid indexPath
+        // which we've already ensure while UIGestureRecognizerStateChanged
+        __block NSIndexPath *indexPath = self.addingIndexPath;
+
+        [UIView animateWithDuration:0.3
+                         animations:^{
+                             CGRect rect = [weakSelf.tableView rectForRowAtIndexPath:indexPath];
+                             snapShotView.transform = CGAffineTransformIdentity;    // restore the transformed value
+                             snapShotView.frame = CGRectOffset(snapShotView.bounds, rect.origin.x, rect.origin.y);
+                         } completion:^(BOOL finished) {
+                             [snapShotView removeFromSuperview];
+                             
+                             [weakSelf.tableView beginUpdates];
+                             [weakSelf.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
+                             [weakSelf.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
+                             [weakSelf.delegate gestureRecognizer:weakSelf needsReplacePlaceholderForRowAtIndexPath:indexPath];
+                             [weakSelf.tableView endUpdates];
+                             
+                             // Update state and clear instance variables
+                             weakSelf.cellSnapshot = nil;
+                             weakSelf.addingIndexPath = nil;
+                             weakSelf.state = JTTableViewGestureRecognizerStateNone;
+                         }];
+
 
     } else if (recognizer.state == UIGestureRecognizerStateChanged) {
-//        NSLog(@"CHANGED %@", recognizer);
-
         // While our finger moves, we also moves the snapshot imageView
         UIImageView *snapShotView = (UIImageView *)[self.tableView viewWithTag:CELL_SNAPSHOT_TAG];
         snapShotView.center = CGPointMake(self.tableView.center.x, location.y);

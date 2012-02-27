@@ -18,6 +18,7 @@ extern CGFloat const JTTableViewCommitEditingRowDefaultLength;
 
 @protocol JTTableViewGestureAddingRowDelegate;
 @protocol JTTableViewGestureEditingRowDelegate;
+@protocol JTTableViewGestureMoveRowDelegate;
 
 
 @interface JTTableViewGestureRecognizer : NSObject <UITableViewDelegate>
