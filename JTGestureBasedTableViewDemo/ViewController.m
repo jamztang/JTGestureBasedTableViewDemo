@@ -13,17 +13,20 @@
 
 // Configure your viewController to conform to JTTableViewGestureEditingRowDelegate
 // and/or JTTableViewGestureAddingRowDelegate depends on your needs
-@interface ViewController () <JTTableViewGestureEditingRowDelegate, JTTableViewGestureAddingRowDelegate>
+@interface ViewController () <JTTableViewGestureEditingRowDelegate, JTTableViewGestureAddingRowDelegate, JTTableViewGestureMoveRowDelegate>
 @property (nonatomic, strong) NSMutableArray *rows;
 @property (nonatomic, strong) JTTableViewGestureRecognizer *tableViewRecognizer;
+@property (nonatomic, strong) id grabbedObject;
 @end
 
 @implementation ViewController
 @synthesize rows;
 @synthesize tableViewRecognizer;
+@synthesize grabbedObject;
 
 #define ADDING_CELL @"Continue..."
 #define DONE_CELL @"Done"
+#define DUMMY_CELL @"Dummy"
 #define COMMITING_CREATE_CELL_HEIGHT 60
 #define NORMAL_CELL_FINISHING_HEIGHT 60
 
@@ -109,6 +112,9 @@
         if ([object isEqual:DONE_CELL]) {
             cell.textLabel.textColor = [UIColor grayColor];
             cell.contentView.backgroundColor = [UIColor darkGrayColor];
+        } else if ([object isEqual:DUMMY_CELL]) {
+            cell.textLabel.text = @"";
+            cell.contentView.backgroundColor = [UIColor clearColor];
         } else {
             cell.textLabel.textColor = [UIColor whiteColor];
             cell.contentView.backgroundColor = backgroundColor;
@@ -190,6 +196,28 @@
         // - [JTTableViewGestureDelegate gestureRecognizer:commitEditingState:forRowAtIndexPath:]
     }
     [tableView endUpdates];
+}
+
+#pragma mark JTTableViewGestureMoveRowDelegate
+
+- (BOOL)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}
+
+- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsCreatePlaceholderForRowAtIndexPath:(NSIndexPath *)indexPath {
+    self.grabbedObject = [self.rows objectAtIndex:indexPath.row];
+    [self.rows replaceObjectAtIndex:indexPath.row withObject:DUMMY_CELL];
+}
+
+- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsMoveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
+    id object = [self.rows objectAtIndex:sourceIndexPath.row];
+    [self.rows removeObjectAtIndex:sourceIndexPath.row];
+    [self.rows insertObject:object atIndex:destinationIndexPath.row];
+}
+
+- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsReplacePlaceholderForRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self.rows replaceObjectAtIndex:indexPath.row withObject:self.grabbedObject];
+    self.grabbedObject = nil;
 }
 
 @end

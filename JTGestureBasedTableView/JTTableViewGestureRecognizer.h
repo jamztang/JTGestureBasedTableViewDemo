@@ -18,6 +18,7 @@ extern CGFloat const JTTableViewCommitEditingRowDefaultLength;
 
 @protocol JTTableViewGestureAddingRowDelegate;
 @protocol JTTableViewGestureEditingRowDelegate;
+@protocol JTTableViewGestureMoveRowDelegate;
 
 
 @interface JTTableViewGestureRecognizer : NSObject <UITableViewDelegate>
@@ -69,6 +70,16 @@ extern CGFloat const JTTableViewCommitEditingRowDefaultLength;
 @end
 
 
+// Conform to JTTableViewGestureMoveRowDelegate to enable features
+// - move cell
+@protocol JTTableViewGestureMoveRowDelegate <NSObject>
+
+- (BOOL)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer canMoveRowAtIndexPath:(NSIndexPath *)indexPath;
+- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsCreatePlaceholderForRowAtIndexPath:(NSIndexPath *)indexPath;
+- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsMoveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath;
+- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsReplacePlaceholderForRowAtIndexPath:(NSIndexPath *)indexPath;
+
+@end
 
 
 
