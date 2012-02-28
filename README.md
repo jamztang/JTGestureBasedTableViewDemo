@@ -3,9 +3,14 @@ JTGestureBasedTableView
 
 An iOS objective-c library template to recreate the gesture based interaction found from Clear for iPhone app.
 
-While it's just in very early development stage, I don't think it's ready for and production usage.
+This project is aimed to be a truely flexible solution, but currently it's still in development stage and missing a few features.
 
-It has been developed under iOS 4.3 and 5.0 devices, sample code has been built using ARC, please use -fobjc-arc per source file complier flag for compiling on non-ARC enviroment.
+
+Known Issues
+------------
+
+It has been developed under iOS 4.3 and 5.0 devices, sample code has been built using ARC (not quite properly). I am still studying to have a proper refactor on my code for a real ARC adoption. 
+There's currently one known issues related to running on non-arc enviornment (e.g. refs #4). Please use `-fobjc-arc` per source file complier flag for compiling on non-ARC enviroment.
 
 
 Abstract
@@ -17,9 +22,10 @@ Clear for iPhone app has showed us so much we can do with a buttonless interface
 Demo
 ----
 
-<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo1.png width=280 style="border: 1px solid white;"></img>
-<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo2.png width=280 style="border: 1px solid white;"></img>
-<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo3.png width=280 style="border: 1px solid white;"></img>
+<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo1.png width=210 style="border: 1px solid white;"></img>
+<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo2.png width=210 style="border: 1px solid white;"></img>
+<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo3.png width=210 style="border: 1px solid white;"></img>
+<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo4.png width=210 style="border: 1px solid white;"></img>
 
 
 Features
@@ -30,6 +36,7 @@ It only supports three features at the moment.
 - Pull down to add cell
 - Pinch to create cell
 - Panning on cell gesture
+- Long hold to reorder cell
 
 How To Use It
 -------------
@@ -100,6 +107,20 @@ Include all header and implementation files in JTGestureBasedTabeView/ into your
 
     - (CGFloat)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer lengthForCommitEditingRowAtIndexPath:(NSIndexPath *)indexPath;
     - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer didChangeContentViewTranslation:(CGPoint)translation forRowAtIndexPath:(NSIndexPath *)indexPath;
+
+    @end
+
+
+### Enabling reorder cell gestures
+
+    // Conform to JTTableViewGestureMoveRowDelegate to enable features
+    // - long press to reorder cell
+    @protocol JTTableViewGestureMoveRowDelegate <NSObject>
+
+    - (BOOL)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer canMoveRowAtIndexPath:(NSIndexPath *)indexPath;
+    - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsCreatePlaceholderForRowAtIndexPath:(NSIndexPath *)indexPath;
+    - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsMoveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath;
+    - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsReplacePlaceholderForRowAtIndexPath:(NSIndexPath *)indexPath;
 
     @end
 
