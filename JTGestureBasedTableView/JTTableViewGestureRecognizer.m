@@ -32,7 +32,10 @@ CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
 @property (nonatomic, retain) UILongPressGestureRecognizer    *longPressRecognizer;
 @property (nonatomic, assign) JTTableViewGestureRecognizerState state;
 @property (nonatomic, retain) UIImage                   *cellSnapshot;
+@property (nonatomic, assign) CGFloat                    scrollingRate;
+@property (nonatomic, strong) NSTimer                   *movingTimer;
 
+- (void)updateAddingIndexPathForCurrentLocation;
 - (void)commitOrDiscardCell;
 
 @end
@@ -44,7 +47,59 @@ CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
 @synthesize addingIndexPath, startPinchingUpperPoint, addingRowHeight;
 @synthesize pinchRecognizer, panRecognizer, longPressRecognizer;
 @synthesize state, addingCellState;
-@synthesize cellSnapshot;
+@synthesize cellSnapshot, scrollingRate, movingTimer;
+
+- (void)scrollTable {
+    // Scroll tableview while touch point is on top or bottom part
+
+    CGPoint location        = CGPointZero;
+    // Refresh the indexPath since it may change while we use a new offset
+    location  = [self.longPressRecognizer locationInView:self.tableView];
+
+    CGPoint currentOffset = self.tableView.contentOffset;
+    CGPoint newOffset = CGPointMake(currentOffset.x, currentOffset.y + self.scrollingRate);
+    if (newOffset.y < 0) {
+        newOffset.y = 0;
+//        NSLog(@"0 %.2f %@", self.scrollingRate, NSStringFromCGPoint(newOffset));
+    } else if (self.tableView.contentSize.height < self.tableView.frame.size.height) {
+//        NSLog(@"3 %.2f %@", self.scrollingRate, NSStringFromCGPoint(newOffset));
+        newOffset = currentOffset;
+    } else if (newOffset.y > self.tableView.contentSize.height - self.tableView.frame.size.height) {
+        newOffset.y = self.tableView.contentSize.height - self.tableView.frame.size.height;
+//        NSLog(@"1 %.2f %@", self.scrollingRate, NSStringFromCGPoint(newOffset));
+    } else {
+//        NSLog(@"2 %.2f %@", self.scrollingRate, NSStringFromCGPoint(newOffset));
+    }
+    [self.tableView setContentOffset:newOffset];
+    
+    if (location.y >= 0) {
+        UIImageView *cellSnapshotView = (id)[self.tableView viewWithTag:CELL_SNAPSHOT_TAG];
+        cellSnapshotView.center = CGPointMake(self.tableView.center.x, location.y);
+    }
+    
+    [self updateAddingIndexPathForCurrentLocation];
+}
+
+- (void)updateAddingIndexPathForCurrentLocation {
+    NSIndexPath *indexPath  = nil;
+    CGPoint location        = CGPointZero;
+    
+
+    // Refresh the indexPath since it may change while we use a new offset
+    location  = [self.longPressRecognizer locationInView:self.tableView];
+    indexPath = [self.tableView indexPathForRowAtPoint:location];
+
+    if (indexPath && ! [indexPath isEqual:self.addingIndexPath]) {
+        [self.tableView beginUpdates];
+        [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:self.addingIndexPath] withRowAnimation:UITableViewRowAnimationNone];
+        [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        [self.delegate gestureRecognizer:self needsMoveRowAtIndexPath:self.addingIndexPath toIndexPath:indexPath];
+
+        self.addingIndexPath = indexPath;
+
+        [self.tableView endUpdates];
+    }
+}
 
 #pragma mark Logic
 
@@ -256,7 +311,10 @@ CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
         self.addingIndexPath = indexPath;
 
         [self.tableView endUpdates];
-        
+
+        // Start timer to prepare for auto scrolling
+        self.movingTimer = [NSTimer timerWithTimeInterval:1/8 target:self selector:@selector(scrollTable) userInfo:nil repeats:YES];
+        [[NSRunLoop mainRunLoop] addTimer:self.movingTimer forMode:NSDefaultRunLoopMode];
 
     } else if (recognizer.state == UIGestureRecognizerStateEnded) {
         // While long press ends, we remove the snapshot imageView
@@ -267,6 +325,10 @@ CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
         // We use self.addingIndexPath directly to make sure we dropped on a valid indexPath
         // which we've already ensure while UIGestureRecognizerStateChanged
         __block NSIndexPath *indexPath = self.addingIndexPath;
+        
+        // Stop timer
+        [self.movingTimer invalidate]; self.movingTimer = nil;
+        self.scrollingRate = 0;
 
         [UIView animateWithDuration:0.3
                          animations:^{
@@ -294,17 +356,22 @@ CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
         UIImageView *snapShotView = (UIImageView *)[self.tableView viewWithTag:CELL_SNAPSHOT_TAG];
         snapShotView.center = CGPointMake(self.tableView.center.x, location.y);
 
-        if (indexPath && ! [indexPath isEqual:self.addingIndexPath]) {
-            [self.tableView beginUpdates];
-            [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:self.addingIndexPath] withRowAnimation:UITableViewRowAnimationNone];
-            [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
-            [self.delegate gestureRecognizer:self needsMoveRowAtIndexPath:self.addingIndexPath toIndexPath:indexPath];
-
-            self.addingIndexPath = indexPath;
-
-            [self.tableView endUpdates];
+        CGRect rect      = self.tableView.bounds;
+        CGPoint location = [self.longPressRecognizer locationInView:self.tableView];
+        location.y -= self.tableView.contentOffset.y;       // We needed to compensate actual contentOffset.y to get the relative y position of touch.
+        
+        [self updateAddingIndexPathForCurrentLocation];
+        
+        CGFloat bottomDropZoneHeight = self.tableView.bounds.size.height / 6;
+        CGFloat topDropZoneHeight    = bottomDropZoneHeight;
+        CGFloat bottomDiff = location.y - (rect.size.height - bottomDropZoneHeight);
+        if (bottomDiff > 0) {
+            self.scrollingRate = bottomDiff / (bottomDropZoneHeight / 1);
+        } else if (location.y <= topDropZoneHeight) {
+            self.scrollingRate = -(topDropZoneHeight - MAX(location.y, 0)) / bottomDropZoneHeight;
+        } else {
+            self.scrollingRate = 0;
         }
-
     }
 }
 
@@ -344,7 +411,7 @@ CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
         CGPoint location = [gestureRecognizer locationInView:self.tableView];
         NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:location];
 
-        if ([self.delegate conformsToProtocol:@protocol(JTTableViewGestureMoveRowDelegate)]) {
+        if (indexPath && [self.delegate conformsToProtocol:@protocol(JTTableViewGestureMoveRowDelegate)]) {
             BOOL canMoveRow = [self.delegate gestureRecognizer:self canMoveRowAtIndexPath:indexPath];
             return canMoveRow;
         }
@@ -403,7 +470,6 @@ CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
     }
     
     if (self.state == JTTableViewGestureRecognizerStateDragging) {
-//        NSLog(@"%@", NSStringFromCGPoint(scrollView.contentOffset));
         self.addingRowHeight += scrollView.contentOffset.y * -1;
         [self.tableView reloadData];
         [scrollView setContentOffset:CGPointZero];
