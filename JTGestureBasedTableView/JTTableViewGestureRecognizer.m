@@ -18,6 +18,7 @@ typedef enum {
 } JTTableViewGestureRecognizerState;
 
 CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
+CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough guess is 0.25
 
 @interface JTTableViewGestureRecognizer () <UIGestureRecognizerDelegate>
 @property (nonatomic, assign) id <JTTableViewGestureAddingRowDelegate, JTTableViewGestureEditingRowDelegate, JTTableViewGestureMoveRowDelegate> delegate;
@@ -116,6 +117,9 @@ CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
         [self.delegate gestureRecognizer:self needsDiscardRowAtIndexPath:self.addingIndexPath];
         [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:self.addingIndexPath] withRowAnimation:UITableViewRowAnimationMiddle];
     }
+    
+    // We would like to reload other rows as well
+    [self.tableView performSelector:@selector(reloadVisibleRowsExceptIndexPath:) withObject:self.addingIndexPath afterDelay:JTTableViewRowAnimationDuration];
 
     self.addingIndexPath = nil;
     [self.tableView endUpdates];
@@ -327,7 +331,7 @@ CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
         [self.movingTimer invalidate]; self.movingTimer = nil;
         self.scrollingRate = 0;
 
-        [UIView animateWithDuration:0.3
+        [UIView animateWithDuration:JTTableViewRowAnimationDuration
                          animations:^{
                              CGRect rect = [weakSelf.tableView rectForRowAtIndexPath:indexPath];
                              snapShotView.transform = CGAffineTransformIdentity;    // restore the transformed value
@@ -341,6 +345,7 @@ CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
                              [weakSelf.delegate gestureRecognizer:weakSelf needsReplacePlaceholderForRowAtIndexPath:indexPath];
                              [weakSelf.tableView endUpdates];
                              
+                             [weakSelf.tableView reloadVisibleRowsExceptIndexPath:indexPath];
                              // Update state and clear instance variables
                              weakSelf.cellSnapshot = nil;
                              weakSelf.addingIndexPath = nil;
@@ -545,6 +550,14 @@ CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
     }
     JTTableViewGestureRecognizer *recognizer = [JTTableViewGestureRecognizer gestureRecognizerWithTableView:self delegate:delegate];
     return recognizer;
+}
+
+#pragma mark Helper methods
+
+- (void)reloadVisibleRowsExceptIndexPath:(NSIndexPath *)indexPath {
+    NSMutableArray *visibleRows = [[self indexPathsForVisibleRows] mutableCopy];
+    [visibleRows removeObject:indexPath];
+    [self reloadRowsAtIndexPaths:visibleRows withRowAnimation:UITableViewRowAnimationNone];
 }
 
 @end

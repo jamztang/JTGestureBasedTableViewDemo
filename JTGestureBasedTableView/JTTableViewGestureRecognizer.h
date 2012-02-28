@@ -16,6 +16,9 @@ typedef enum {
 
 extern CGFloat const JTTableViewCommitEditingRowDefaultLength;
 
+// JTTableViewRowAnimationDuration is decided to be as close as the internal settings of UITableViewRowAnimation duration
+extern CGFloat const JTTableViewRowAnimationDuration;
+
 @protocol JTTableViewGestureAddingRowDelegate;
 @protocol JTTableViewGestureEditingRowDelegate;
 @protocol JTTableViewGestureMoveRowDelegate;
@@ -86,5 +89,8 @@ extern CGFloat const JTTableViewCommitEditingRowDefaultLength;
 @interface UITableView (JTTableViewGestureDelegate)
 
 - (JTTableViewGestureRecognizer *)enableGestureTableViewWithDelegate:(id)delegate;
+
+// Helper methods for updating cell after datasource changes
+- (void)reloadVisibleRowsExceptIndexPath:(NSIndexPath *)indexPath;
 
 @end

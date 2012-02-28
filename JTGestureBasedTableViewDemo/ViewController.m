@@ -197,6 +197,9 @@
         // - [JTTableViewGestureDelegate gestureRecognizer:commitEditingState:forRowAtIndexPath:]
     }
     [tableView endUpdates];
+
+    // Row color needs update after datasource changes, reload it.
+    [tableView performSelector:@selector(reloadVisibleRowsExceptIndexPath:) withObject:indexPath afterDelay:JTTableViewRowAnimationDuration];
 }
 
 #pragma mark JTTableViewGestureMoveRowDelegate
