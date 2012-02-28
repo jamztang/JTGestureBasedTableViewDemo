@@ -47,6 +47,7 @@
                  @"Swipe to left to delete",
                  @"Drag down to create a new cell",
                  @"Pinch two rows apart to create cell",
+                 @"Long hold to start reorder cell",
                  nil];
 
 

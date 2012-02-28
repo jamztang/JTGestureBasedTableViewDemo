@@ -60,15 +60,11 @@ CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
     CGPoint newOffset = CGPointMake(currentOffset.x, currentOffset.y + self.scrollingRate);
     if (newOffset.y < 0) {
         newOffset.y = 0;
-//        NSLog(@"0 %.2f %@", self.scrollingRate, NSStringFromCGPoint(newOffset));
     } else if (self.tableView.contentSize.height < self.tableView.frame.size.height) {
-//        NSLog(@"3 %.2f %@", self.scrollingRate, NSStringFromCGPoint(newOffset));
         newOffset = currentOffset;
     } else if (newOffset.y > self.tableView.contentSize.height - self.tableView.frame.size.height) {
         newOffset.y = self.tableView.contentSize.height - self.tableView.frame.size.height;
-//        NSLog(@"1 %.2f %@", self.scrollingRate, NSStringFromCGPoint(newOffset));
     } else {
-//        NSLog(@"2 %.2f %@", self.scrollingRate, NSStringFromCGPoint(newOffset));
     }
     [self.tableView setContentOffset:newOffset];
     
@@ -120,6 +116,7 @@ CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
         [self.delegate gestureRecognizer:self needsDiscardRowAtIndexPath:self.addingIndexPath];
         [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:self.addingIndexPath] withRowAnimation:UITableViewRowAnimationMiddle];
     }
+
     self.addingIndexPath = nil;
     [self.tableView endUpdates];
     
@@ -541,8 +538,10 @@ CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
 @implementation UITableView (JTTableViewGestureDelegate)
 
 - (JTTableViewGestureRecognizer *)enableGestureTableViewWithDelegate:(id)delegate {
-    if ( ! [delegate conformsToProtocol:@protocol(JTTableViewGestureAddingRowDelegate)] && ! [delegate conformsToProtocol:@protocol(JTTableViewGestureEditingRowDelegate)]) {
-        [NSException raise:@"delegate should at least conform to one of JTTableViewGestureAddingRowDelegate or JTTableViewGestureEditingRowDelegate" format:nil];
+    if ( ! [delegate conformsToProtocol:@protocol(JTTableViewGestureAddingRowDelegate)]
+        && ! [delegate conformsToProtocol:@protocol(JTTableViewGestureEditingRowDelegate)]
+        && ! [delegate conformsToProtocol:@protocol(JTTableViewGestureMoveRowDelegate)]) {
+        [NSException raise:@"delegate should at least conform to one of JTTableViewGestureAddingRowDelegate, JTTableViewGestureEditingRowDelegate or JTTableViewGestureMoveRowDelegate" format:nil];
     }
     JTTableViewGestureRecognizer *recognizer = [JTTableViewGestureRecognizer gestureRecognizerWithTableView:self delegate:delegate];
     return recognizer;

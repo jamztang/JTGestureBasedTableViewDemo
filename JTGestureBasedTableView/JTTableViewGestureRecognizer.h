@@ -71,7 +71,7 @@ extern CGFloat const JTTableViewCommitEditingRowDefaultLength;
 
 
 // Conform to JTTableViewGestureMoveRowDelegate to enable features
-// - move cell
+// - long press to reorder cell
 @protocol JTTableViewGestureMoveRowDelegate <NSObject>
 
 - (BOOL)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer canMoveRowAtIndexPath:(NSIndexPath *)indexPath;
