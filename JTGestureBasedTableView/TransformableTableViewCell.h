@@ -8,9 +8,24 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TransformableTableViewCell : UITableViewCell
+typedef enum {
+    TransformableTableViewCellStyleUnfolding,
+    TransformableTableViewCellStylePullDown,
+} TransformableTableViewCellStyle;
+
+
+@protocol TransformableTableViewCell <NSObject>
 
 @property (nonatomic, assign) CGFloat  finishedHeight;
 @property (nonatomic, retain) UIColor *tintColor;   // default is white color
+
+@end
+
+
+@interface TransformableTableViewCell : UITableViewCell <TransformableTableViewCell>
+
+// Use this factory method instead of 
+// - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier;
++ (TransformableTableViewCell *)transformableTableViewCellWithStyle:(TransformableTableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier;
 
 @end

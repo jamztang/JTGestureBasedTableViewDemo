@@ -75,27 +75,61 @@
     NSObject *object = [self.rows objectAtIndex:indexPath.row];
     UIColor *backgroundColor = [[UIColor redColor] colorWithHueOffset:0.12 * indexPath.row / [self tableView:tableView numberOfRowsInSection:indexPath.section]];
     if ([object isEqual:ADDING_CELL]) {
-        static NSString *cellIdentifier = @"TransformableTableViewCell";
-        TransformableTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-        if (cell == nil) {
-            cell = [[TransformableTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
-            cell.textLabel.adjustsFontSizeToFitWidth = YES;
-            cell.textLabel.textColor = [UIColor whiteColor];
-            cell.textLabel.textAlignment = UITextAlignmentCenter;
-        }
+        NSString *cellIdentifier = nil;
+        TransformableTableViewCell *cell = nil;
 
-        // Setup tint color
-        cell.tintColor = backgroundColor;
+        // IndexPath.row == 0 is the case we wanted to pick the pullDown style
+        if (indexPath.row == 0) {
+            cellIdentifier = @"PullDownTableViewCell";
+            cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+            
+            if (cell == nil) {
+                cell = [TransformableTableViewCell transformableTableViewCellWithStyle:TransformableTableViewCellStylePullDown
+                                                                       reuseIdentifier:cellIdentifier];
+                cell.textLabel.adjustsFontSizeToFitWidth = YES;
+                cell.textLabel.textColor = [UIColor whiteColor];
+                cell.textLabel.textAlignment = UITextAlignmentCenter;
+            }
+            
+            // Setup tint color
+            cell.tintColor = backgroundColor;
+            
+            cell.finishedHeight = COMMITING_CREATE_CELL_HEIGHT;
+            if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT) {
+                cell.textLabel.text = @"Release to create cell...";
+            } else {
+                cell.textLabel.text = @"Continue Pulling...";
+            }
+            cell.contentView.backgroundColor = [UIColor clearColor];
+            cell.detailTextLabel.text = @" ";
+            return cell;
 
-        cell.finishedHeight = COMMITING_CREATE_CELL_HEIGHT;
-        if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT) {
-            cell.textLabel.text = @"Release to create cell...";
         } else {
-            cell.textLabel.text = (NSString *)object;
+            // Otherwise is the case we wanted to pick the pullDown style
+            cellIdentifier = @"UnfoldingTableViewCell";
+            cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+
+            if (cell == nil) {
+                cell = [TransformableTableViewCell transformableTableViewCellWithStyle:TransformableTableViewCellStyleUnfolding
+                                                                       reuseIdentifier:cellIdentifier];
+                cell.textLabel.adjustsFontSizeToFitWidth = YES;
+                cell.textLabel.textColor = [UIColor whiteColor];
+                cell.textLabel.textAlignment = UITextAlignmentCenter;
+            }
+            
+            // Setup tint color
+            cell.tintColor = backgroundColor;
+            
+            cell.finishedHeight = COMMITING_CREATE_CELL_HEIGHT;
+            if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT) {
+                cell.textLabel.text = @"Release to create cell...";
+            } else {
+                cell.textLabel.text = @"Continue Pinching...";
+            }
+            cell.contentView.backgroundColor = [UIColor clearColor];
+            cell.detailTextLabel.text = @" ";
+            return cell;
         }
-        cell.contentView.backgroundColor = [UIColor clearColor];
-        cell.detailTextLabel.text = @" ";
-        return cell;
     
     } else {
 
