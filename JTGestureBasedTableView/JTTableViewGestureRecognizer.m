@@ -9,6 +9,13 @@
 #import "JTTableViewGestureRecognizer.h"
 #import <QuartzCore/QuartzCore.h>
 
+@protocol JTTableViewGestureDelegate <
+JTTableViewGestureAddingRowDelegate, 
+JTTableViewGestureEditingRowDelegate, 
+JTTableViewGestureMoveRowDelegate, 
+JTTableViewGesturePinchInDelegate>
+@end
+
 typedef enum {
     JTTableViewGestureRecognizerStateNone,
     JTTableViewGestureRecognizerStateDragging,
@@ -21,7 +28,7 @@ CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
 CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough guess is 0.25
 
 @interface JTTableViewGestureRecognizer () <UIGestureRecognizerDelegate>
-@property (nonatomic, assign) id <JTTableViewGestureAddingRowDelegate, JTTableViewGestureEditingRowDelegate, JTTableViewGestureMoveRowDelegate> delegate;
+@property (nonatomic, assign) id <JTTableViewGestureDelegate> delegate;
 @property (nonatomic, assign) id <UITableViewDelegate>   tableViewDelegate;
 @property (nonatomic, assign) UITableView               *tableView;
 @property (nonatomic, assign) CGFloat                    addingRowHeight;
@@ -29,6 +36,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
 @property (nonatomic, assign) JTTableViewCellEditingState  addingCellState;
 @property (nonatomic, assign) CGPoint                    startPinchingUpperPoint;
 @property (nonatomic, retain) UIPinchGestureRecognizer  *pinchRecognizer;
+@property (nonatomic, retain) UIPinchGestureRecognizer  *pinchInRecognizer;
 @property (nonatomic, retain) UIPanGestureRecognizer    *panRecognizer;
 @property (nonatomic, retain) UILongPressGestureRecognizer    *longPressRecognizer;
 @property (nonatomic, assign) JTTableViewGestureRecognizerState state;
@@ -46,7 +54,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
 @implementation JTTableViewGestureRecognizer
 @synthesize delegate, tableView, tableViewDelegate;
 @synthesize addingIndexPath, startPinchingUpperPoint, addingRowHeight;
-@synthesize pinchRecognizer, panRecognizer, longPressRecognizer;
+@synthesize pinchRecognizer, panRecognizer, longPressRecognizer, pinchInRecognizer;
 @synthesize state, addingCellState;
 @synthesize cellSnapshot, scrollingRate, movingTimer;
 
@@ -199,6 +207,18 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
         CGFloat diffOffsetY = self.startPinchingUpperPoint.y - newUpperPoint.y;
         CGPoint newOffset   = (CGPoint){self.tableView.contentOffset.x, self.tableView.contentOffset.y+diffOffsetY};
         [self.tableView setContentOffset:newOffset animated:NO];
+    }
+}
+
+- (void)pinchInGestureRecognizer:(UIPinchGestureRecognizer *)recognizer {
+    NSLog(@"%@", recognizer);
+    
+    if (recognizer.state == UIGestureRecognizerStateBegan) {
+        
+    } else if (recognizer.state == UIGestureRecognizerStateChanged) {
+        
+    } else if (recognizer.state == UIGestureRecognizerStateEnded) {
+        [self.delegate gestureRecognizerDidCommitPinchIn:self];
     }
 }
 
@@ -404,7 +424,9 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
             return canEditRow;
         }
     } else if (gestureRecognizer == self.pinchRecognizer) {
-        if ( ! [self.delegate conformsToProtocol:@protocol(JTTableViewGestureAddingRowDelegate)]) {
+        
+        CGFloat velocity = [(UIPinchGestureRecognizer *)gestureRecognizer velocity];
+        if (velocity < 0 || ! [self.delegate conformsToProtocol:@protocol(JTTableViewGestureAddingRowDelegate)]) {
             NSLog(@"Should not begin pinch");
             return NO;
         }
@@ -418,6 +440,11 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
             return canMoveRow;
         }
         return NO;
+    } else if (gestureRecognizer == self.pinchInRecognizer) {
+        CGFloat velocity = [(UIPinchGestureRecognizer *)gestureRecognizer velocity];
+        if (velocity > 0 || ! [self.delegate conformsToProtocol:@protocol(JTTableViewGesturePinchInDelegate)]) {
+            return NO;
+        }
     }
     return YES;
 }
@@ -523,6 +550,11 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
     [tableView addGestureRecognizer:pinch];
     pinch.delegate             = recognizer;
     recognizer.pinchRecognizer = pinch;
+
+    UIPinchGestureRecognizer *pinchIn = [[UIPinchGestureRecognizer alloc] initWithTarget:recognizer action:@selector(pinchInGestureRecognizer:)];
+    [tableView addGestureRecognizer:pinchIn];
+    pinchIn.delegate             = recognizer;
+    recognizer.pinchInRecognizer = pinchIn;
 
     UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:recognizer action:@selector(panGestureRecognizer:)];
     [tableView addGestureRecognizer:pan];

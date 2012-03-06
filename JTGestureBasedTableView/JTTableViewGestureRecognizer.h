@@ -22,7 +22,7 @@ extern CGFloat const JTTableViewRowAnimationDuration;
 @protocol JTTableViewGestureAddingRowDelegate;
 @protocol JTTableViewGestureEditingRowDelegate;
 @protocol JTTableViewGestureMoveRowDelegate;
-
+@protocol JTTableViewGesturePinchInDelegate;
 
 @interface JTTableViewGestureRecognizer : NSObject <UITableViewDelegate>
 
@@ -81,6 +81,15 @@ extern CGFloat const JTTableViewRowAnimationDuration;
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsCreatePlaceholderForRowAtIndexPath:(NSIndexPath *)indexPath;
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsMoveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath;
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsReplacePlaceholderForRowAtIndexPath:(NSIndexPath *)indexPath;
+
+@end
+
+// Conform to JTTableViewGesturePinchInDelegate
+// - Pinch in to navigate back to previous navigation stack
+
+@protocol JTTableViewGesturePinchInDelegate <NSObject>
+
+- (void)gestureRecognizerDidCommitPinchIn:(JTTableViewGestureRecognizer *)gestureRecognizer;
 
 @end
 

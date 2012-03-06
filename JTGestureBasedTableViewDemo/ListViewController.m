@@ -1,28 +1,31 @@
 //
-//  ViewController.m
+//  ListViewController.m
 //  JTGestureBasedTableViewDemo
 //
-//  Created by James Tang on 2/6/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by James Tang Chi Chiu on 6/3/12.
+//  Copyright (c) 2012 CUHK. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "ListViewController.h"
 #import "TransformableTableViewCell.h"
 #import "JTTableViewGestureRecognizer.h"
 #import "UIColor+JTGestureBasedTableViewHelper.h"
+#import "ViewController.h"
 
 // Configure your viewController to conform to JTTableViewGestureEditingRowDelegate
 // and/or JTTableViewGestureAddingRowDelegate depends on your needs
-@interface ViewController () <JTTableViewGestureEditingRowDelegate, JTTableViewGestureAddingRowDelegate, JTTableViewGestureMoveRowDelegate, JTTableViewGesturePinchInDelegate>
+@interface ListViewController () <JTTableViewGestureEditingRowDelegate, JTTableViewGestureAddingRowDelegate, JTTableViewGestureMoveRowDelegate>
 @property (nonatomic, strong) NSMutableArray *rows;
 @property (nonatomic, strong) JTTableViewGestureRecognizer *tableViewRecognizer;
 @property (nonatomic, strong) id grabbedObject;
+@property (nonatomic, strong) NSIndexPath *selectedIndexPath;
 @end
 
-@implementation ViewController
+@implementation ListViewController
 @synthesize rows;
 @synthesize tableViewRecognizer;
 @synthesize grabbedObject;
+@synthesize selectedIndexPath;
 
 #define ADDING_CELL @"Continue..."
 #define DONE_CELL @"Done"
@@ -49,8 +52,8 @@
                  @"Pinch two rows apart to create cell",
                  @"Long hold to start reorder cell",
                  nil];
-
-
+    
+    
     // Setup your tableView.delegate and tableView.datasource,
     // then enable gesture recognition in one line.
     self.tableViewRecognizer = [self.tableView enableGestureTableViewWithDelegate:self];
@@ -71,13 +74,13 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-
+    
     NSObject *object = [self.rows objectAtIndex:indexPath.row];
-    UIColor *backgroundColor = [[UIColor redColor] colorWithHueOffset:0.12 * indexPath.row / [self tableView:tableView numberOfRowsInSection:indexPath.section]];
+    UIColor *backgroundColor = [[UIColor blueColor] colorWithHueOffset:0.12 * indexPath.row / [self tableView:tableView numberOfRowsInSection:indexPath.section]];
     if ([object isEqual:ADDING_CELL]) {
         NSString *cellIdentifier = nil;
         TransformableTableViewCell *cell = nil;
-
+        
         // IndexPath.row == 0 is the case we wanted to pick the pullDown style
         if (indexPath.row == 0) {
             cellIdentifier = @"PullDownTableViewCell";
@@ -103,12 +106,12 @@
             cell.contentView.backgroundColor = [UIColor clearColor];
             cell.detailTextLabel.text = @" ";
             return cell;
-
+            
         } else {
             // Otherwise is the case we wanted to pick the pullDown style
             cellIdentifier = @"UnfoldingTableViewCell";
             cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-
+            
             if (cell == nil) {
                 cell = [TransformableTableViewCell transformableTableViewCellWithStyle:TransformableTableViewCellStyleUnfolding
                                                                        reuseIdentifier:cellIdentifier];
@@ -130,9 +133,9 @@
             cell.detailTextLabel.text = @" ";
             return cell;
         }
-    
+        
     } else {
-
+        
         static NSString *cellIdentifier = @"MyCell";
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
         if (cell == nil) {
@@ -141,7 +144,7 @@
             cell.textLabel.backgroundColor = [UIColor clearColor];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
-
+        
         cell.textLabel.text = [NSString stringWithFormat:@"%@", (NSString *)object];
         cell.detailTextLabel.text = @" ";
         if ([object isEqual:DONE_CELL]) {
@@ -156,7 +159,7 @@
         }
         return cell;
     }
-
+    
 }
 
 #pragma mark UITableViewDelegate
@@ -167,6 +170,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"tableView:didSelectRowAtIndexPath: %@", indexPath);
+    ViewController *controller = [[ViewController alloc] init];
+    [self.navigationController pushViewController:controller animated:YES];
+    self.selectedIndexPath = indexPath;
 }
 
 #pragma mark -
@@ -191,11 +197,11 @@
 
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer didEnterEditingState:(JTTableViewCellEditingState)state forRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-
+    
     UIColor *backgroundColor = nil;
     switch (state) {
         case JTTableViewCellEditingStateMiddle:
-            backgroundColor = [[UIColor redColor] colorWithHueOffset:0.12 * indexPath.row / [self tableView:self.tableView numberOfRowsInSection:indexPath.section]];
+            backgroundColor = [[UIColor blueColor] colorWithHueOffset:0.12 * indexPath.row / [self tableView:self.tableView numberOfRowsInSection:indexPath.section]];
             break;
         case JTTableViewCellEditingStateRight:
             backgroundColor = [UIColor greenColor];
@@ -231,7 +237,7 @@
         // - [JTTableViewGestureDelegate gestureRecognizer:commitEditingState:forRowAtIndexPath:]
     }
     [tableView endUpdates];
-
+    
     // Row color needs update after datasource changes, reload it.
     [tableView performSelector:@selector(reloadVisibleRowsExceptIndexPath:) withObject:indexPath afterDelay:JTTableViewRowAnimationDuration];
 }
@@ -258,10 +264,5 @@
     self.grabbedObject = nil;
 }
 
-#pragma mark JTTableViewGesturePinchInDelegate
-
-- (void)gestureRecognizerDidCommitPinchIn:(JTTableViewGestureRecognizer *)gestureRecognizer {
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
 @end
+

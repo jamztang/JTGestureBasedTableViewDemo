@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 
 #import "ViewController.h"
+#import "ListViewController.h"
 
 @implementation AppDelegate
 
@@ -22,10 +23,14 @@
 
     // Will auto load the corresponding viewController.xib
     self.viewController = [[ViewController alloc] initWithNibName:nil bundle:nil];
+    ListViewController *listViewController = [[ListViewController alloc] init];
+    
+    UINavigationController *navController = [[UINavigationController alloc] init];
+    [navController setViewControllers:[NSArray arrayWithObjects:listViewController, self.viewController, nil]];
 
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque];
 
-    self.window.rootViewController = self.viewController;
+    self.window.rootViewController = navController;
     [self.window makeKeyAndVisible];
     return YES;
 }

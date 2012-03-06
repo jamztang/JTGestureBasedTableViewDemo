@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1AA54AFF1506313B0077B7D3 /* ListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AA54AFE1506313B0077B7D3 /* ListViewController.m */; };
 		1AA68A5314FA443D009145F3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6217C14DF7F1E00400117 /* UIKit.framework */; };
 		1AA68A5414FA443D009145F3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6217E14DF7F1E00400117 /* Foundation.framework */; };
 		1AA68A5514FA443D009145F3 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6218014DF7F1E00400117 /* CoreGraphics.framework */; };
@@ -51,6 +52,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1AA54AFD1506313B0077B7D3 /* ListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListViewController.h; sourceTree = "<group>"; };
+		1AA54AFE1506313B0077B7D3 /* ListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListViewController.m; sourceTree = "<group>"; };
 		1AA68A5114FA443D009145F3 /* JTGestureBaseTableViewStoryBoardDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JTGestureBaseTableViewStoryBoardDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AA68A5814FA443D009145F3 /* JTGestureBaseTableViewStoryBoardDemo-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "JTGestureBaseTableViewStoryBoardDemo-Info.plist"; sourceTree = "<group>"; };
 		1AA68A5A14FA443D009145F3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -204,6 +207,8 @@
 				52D6218F14DF7F1E00400117 /* ViewController.m */,
 				52D6219114DF7F1E00400117 /* ViewController_iPhone.xib */,
 				52D6219414DF7F1E00400117 /* ViewController_iPad.xib */,
+				1AA54AFD1506313B0077B7D3 /* ListViewController.h */,
+				1AA54AFE1506313B0077B7D3 /* ListViewController.m */,
 				52D6218314DF7F1E00400117 /* Supporting Files */,
 			);
 			path = JTGestureBasedTableViewDemo;
@@ -393,6 +398,7 @@
 				5296DB0C14E977C20044BD53 /* JTTableViewGestureRecognizer.m in Sources */,
 				5296DB0D14E977C20044BD53 /* TransformableTableViewCell.m in Sources */,
 				52B4AC6514EB47AC006574B9 /* UIColor+JTGestureBasedTableViewHelper.m in Sources */,
+				1AA54AFF1506313B0077B7D3 /* ListViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
