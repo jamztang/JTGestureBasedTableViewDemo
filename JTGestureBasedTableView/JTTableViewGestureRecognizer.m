@@ -214,9 +214,19 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
     NSLog(@"%@", recognizer);
     
     if (recognizer.state == UIGestureRecognizerStateBegan) {
-        
+
     } else if (recognizer.state == UIGestureRecognizerStateChanged) {
-        
+        CGFloat scale = [recognizer scale];
+        CGFloat currentFingerDistance = fabsf([recognizer locationOfTouch:0 inView:nil].y - [recognizer locationOfTouch:1 inView:nil].y);
+        CGFloat absoluteDistanceDiff = currentFingerDistance/scale - currentFingerDistance;
+
+        NSArray *cells = [self.tableView visibleCells];
+        for (int i = 0; i < [cells count]; i++) {
+            UITableViewCell *cell = [cells objectAtIndex:i];
+            
+            cell.transform = CGAffineTransformMakeTranslation(0, -absoluteDistanceDiff * i);
+        }
+
     } else if (recognizer.state == UIGestureRecognizerStateEnded) {
         [self.delegate gestureRecognizerDidCommitPinchIn:self];
     }
