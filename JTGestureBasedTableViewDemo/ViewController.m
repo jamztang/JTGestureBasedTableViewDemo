@@ -9,7 +9,7 @@
 #import "ViewController.h"
 #import "TransformableTableViewCell.h"
 #import "JTTableViewGestureRecognizer.h"
-#import "UIColor+JTGestureBasedTableViewHelper.h"
+#import "NSObject+JTGestureBasedTableViewHelper.h"
 
 // Configure your viewController to conform to JTTableViewGestureEditingRowDelegate
 // and/or JTTableViewGestureAddingRowDelegate depends on your needs

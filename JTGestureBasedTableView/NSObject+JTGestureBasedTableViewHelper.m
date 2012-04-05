@@ -6,7 +6,7 @@
  * file that was distributed with this source code.
  */
 
-#import "UIColor+JTGestureBasedTableViewHelper.h"
+#import "NSObject+JTGestureBasedTableViewHelper.h"
 
 @implementation UIColor (JTGestureBasedTableViewHelper)
 - (UIColor *)colorWithBrightness:(CGFloat)brightnessComponent {

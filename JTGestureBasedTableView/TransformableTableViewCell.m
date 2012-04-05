@@ -7,7 +7,7 @@
  */
 
 #import "TransformableTableViewCell.h"
-#import "UIColor+JTGestureBasedTableViewHelper.h"
+#import "NSObject+JTGestureBasedTableViewHelper.h"
 #import <QuartzCore/QuartzCore.h>
 
 
