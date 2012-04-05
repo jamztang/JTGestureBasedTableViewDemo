@@ -13,3 +13,8 @@
 - (UIColor *)colorWithHueOffset:(CGFloat)hueOffset;
 @end
 
+
+
+@interface UIView (JTGestureBasedTableViewHelper)
+- (UIImage *)snapshot;
+@end

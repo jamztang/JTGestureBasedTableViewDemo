@@ -7,7 +7,7 @@
  */
 
 #import "JTTableViewGestureRecognizer.h"
-#import <QuartzCore/QuartzCore.h>
+#import "NSObject+JTGestureBasedTableViewHelper.h"
 
 @protocol JTTableViewGestureDelegate <
 JTTableViewGestureAddingRowDelegate, 
@@ -314,10 +314,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
         self.state = JTTableViewGestureRecognizerStateMoving;
         
         UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-        UIGraphicsBeginImageContextWithOptions(cell.bounds.size, NO, 0);
-        [cell.layer renderInContext:UIGraphicsGetCurrentContext()];
-        UIImage *cellImage = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
+        UIImage *cellImage = [cell snapshot];
 
         // We create an imageView for caching the cell snapshot here
         UIImageView *snapShotView = (UIImageView *)[self.tableView viewWithTag:CELL_SNAPSHOT_TAG];

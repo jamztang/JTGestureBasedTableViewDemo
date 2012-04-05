@@ -7,6 +7,7 @@
  */
 
 #import "NSObject+JTGestureBasedTableViewHelper.h"
+#import <QuartzCore/QuartzCore.h>
 
 @implementation UIColor (JTGestureBasedTableViewHelper)
 - (UIColor *)colorWithBrightness:(CGFloat)brightnessComponent {
@@ -57,4 +58,17 @@
     }
     return newColor;
 }
+@end
+
+
+@implementation UIView (JTGestureBasedTableViewHelper)
+
+- (UIImage *)snapshot {
+    UIGraphicsBeginImageContextWithOptions(self.bounds.size, NO, 0);
+    [self.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
+
 @end
