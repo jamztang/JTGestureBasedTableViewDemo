@@ -48,6 +48,7 @@
                  @"Drag down to create a new cell",
                  @"Pinch two rows apart to create cell",
                  @"Long hold to start reorder cell",
+                 @"Pinch in to go one level up",
                  nil];
 
 

@@ -8,6 +8,7 @@
 
 #import "JTTableViewGestureRecognizer.h"
 #import "NSObject+JTGestureBasedTableViewHelper.h"
+#import <QuartzCore/QuartzCore.h>
 
 @protocol JTTableViewGestureDelegate <
 JTTableViewGestureAddingRowDelegate, 
@@ -213,21 +214,69 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
     NSLog(@"%@", recognizer);
     
     if (recognizer.state == UIGestureRecognizerStateBegan) {
+        self.state = JTTableViewGestureRecognizerStatePinching;
+        self.startPinchingUpperPoint = [recognizer topPoint];
 
     } else if (recognizer.state == UIGestureRecognizerStateChanged) {
+
+        CGPoint currentPoint = [recognizer topPoint];
         CGFloat scale = [recognizer scale];
-        CGFloat currentFingerDistance = fabsf([recognizer locationOfTouch:0 inView:nil].y - [recognizer locationOfTouch:1 inView:nil].y);
+
+        CGFloat currentFingerDistance = [recognizer bottomPoint].y - currentPoint.y;
         CGFloat absoluteDistanceDiff = currentFingerDistance/scale - currentFingerDistance;
+
+
+
+        if (scale > 1) {
+            // Prevent cell translated too apart
+            absoluteDistanceDiff = 0;
+        } else {
+            // Prevent cell collapsed underflow
+            CGFloat firstVisibleRowHeight = self.tableView.rowHeight;
+            if ([self.tableViewDelegate respondsToSelector:@selector(tableView:heightForRowAtIndexPath:)]) {
+                NSIndexPath *indexPath = [[self.tableView indexPathsForVisibleRows] objectAtIndex:0];
+                firstVisibleRowHeight = [self.tableViewDelegate tableView:self.tableView heightForRowAtIndexPath:indexPath];
+            }
+            absoluteDistanceDiff = MIN(firstVisibleRowHeight, absoluteDistanceDiff);
+        }
 
         NSArray *cells = [self.tableView visibleCells];
         for (int i = 0; i < [cells count]; i++) {
             UITableViewCell *cell = [cells objectAtIndex:i];
             
-            cell.transform = CGAffineTransformMakeTranslation(0, -absoluteDistanceDiff * i);
+            cell.transform = CGAffineTransformMakeTranslation(0, -absoluteDistanceDiff * i + currentPoint.y - self.startPinchingUpperPoint.y);
         }
 
     } else if (recognizer.state == UIGestureRecognizerStateEnded) {
-        [self.delegate gestureRecognizerDidCommitPinchIn:self];
+        CGPoint currentPoint = [recognizer topPoint];
+        CGFloat scale = [recognizer scale];
+        CGFloat currentFingerDistance = [recognizer bottomPoint].y - currentPoint.y;
+        CGFloat absoluteDistanceDiff = currentFingerDistance/scale - currentFingerDistance;
+        
+        CGFloat firstVisibleRowHeight = self.tableView.rowHeight;
+        if ([self.tableViewDelegate respondsToSelector:@selector(tableView:heightForRowAtIndexPath:)]) {
+            NSIndexPath *indexPath = [[self.tableView indexPathsForVisibleRows] objectAtIndex:0];
+            firstVisibleRowHeight = [self.tableViewDelegate tableView:self.tableView heightForRowAtIndexPath:indexPath];
+        }
+
+        if (absoluteDistanceDiff >= firstVisibleRowHeight) {
+            [self.delegate gestureRecognizerDidCommitPinchIn:self];
+        } else {
+            [UIView beginAnimations:@"restoreCellAnimation" context:nil];
+            [UIView setAnimationDuration:JTTableViewRowAnimationDuration];
+
+            self.tableView.transform = CGAffineTransformIdentity;
+
+            NSArray *cells = [self.tableView visibleCells];
+            for (int i = 0; i < [cells count]; i++) {
+                UITableViewCell *cell = [cells objectAtIndex:i];
+                cell.transform = CGAffineTransformIdentity;
+            }
+            [UIView commitAnimations];
+        }
+
+        self.startPinchingUpperPoint = CGPointZero;
+        self.state = JTTableViewGestureRecognizerStateNone;
     }
 }
 

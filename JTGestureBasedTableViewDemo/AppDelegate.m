@@ -28,6 +28,8 @@
     UINavigationController *navController = [[UINavigationController alloc] init];
     [navController setViewControllers:[NSArray arrayWithObjects:listViewController, self.viewController, nil]];
 
+    [navController setNavigationBarHidden:YES animated:NO];
+
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque];
 
     self.window.rootViewController = navController;
