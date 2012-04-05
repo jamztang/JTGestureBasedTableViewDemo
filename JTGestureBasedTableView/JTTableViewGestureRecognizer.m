@@ -152,12 +152,11 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
         }
         return;
     }
+
+    CGPoint topPoint = [recognizer topPoint];
+    CGPoint bottomPoint = [recognizer bottomPoint];
     
-    CGPoint location1 = [recognizer locationOfTouch:0 inView:self.tableView];
-    CGPoint location2 = [recognizer locationOfTouch:1 inView:self.tableView];
-    CGPoint upperPoint = location1.y < location2.y ? location1 : location2;
-    
-    CGRect  rect = (CGRect){location1, location2.x - location1.x, location2.y - location1.y};
+    CGRect  rect = (CGRect){topPoint, bottomPoint.x - topPoint.x, bottomPoint.y - topPoint.y};
     
     if (recognizer.state == UIGestureRecognizerStateBegan) {
         self.state = JTTableViewGestureRecognizerStatePinching;
@@ -170,7 +169,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
         NSIndexPath *midIndexPath = [NSIndexPath indexPathForRow:midIndex inSection:firstIndexPath.section];
         
         // Setting up properties for referencing later when touches changes
-        self.startPinchingUpperPoint = upperPoint;
+        self.startPinchingUpperPoint = topPoint;
         
         if ([self.delegate respondsToSelector:@selector(gestureRecognizer:willCreateCellAtIndexPath:)]) {
            self.addingIndexPath = [self.delegate gestureRecognizer:self willCreateCellAtIndexPath:midIndexPath];
@@ -203,7 +202,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
         
         // Scrolls tableview according to the upper touch point to mimic a realistic
         // dragging gesture
-        CGPoint newUpperPoint = upperPoint;
+        CGPoint newUpperPoint = topPoint;
         CGFloat diffOffsetY = self.startPinchingUpperPoint.y - newUpperPoint.y;
         CGPoint newOffset   = (CGPoint){self.tableView.contentOffset.x, self.tableView.contentOffset.y+diffOffsetY};
         [self.tableView setContentOffset:newOffset animated:NO];
