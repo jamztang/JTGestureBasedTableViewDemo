@@ -187,6 +187,14 @@
     [self.rows removeObjectAtIndex:indexPath.row];
 }
 
+// Uncomment to following code to disable pinch in to create cell gesture
+//- (NSIndexPath *)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer willCreateCellAtIndexPath:(NSIndexPath *)indexPath {
+//    if (indexPath.section == 0 && indexPath.row == 0) {
+//        return indexPath;
+//    }
+//    return nil;
+//}
+
 #pragma mark JTTableViewGestureEditingRowDelegate
 
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer didEnterEditingState:(JTTableViewCellEditingState)state forRowAtIndexPath:(NSIndexPath *)indexPath {

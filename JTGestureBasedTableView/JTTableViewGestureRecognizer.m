@@ -152,37 +152,24 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
     CGRect  rect = (CGRect){location1, location2.x - location1.x, location2.y - location1.y};
     
     if (recognizer.state == UIGestureRecognizerStateBegan) {
+        NSAssert(self.addingIndexPath != nil, @"self.addingIndexPath must not be nil, we should have set it in recognizerShouldBegin");
+
         self.state = JTTableViewGestureRecognizerStatePinching;
 
-        NSArray *indexPaths = [self.tableView indexPathsForRowsInRect:rect];
-        
-        NSIndexPath *firstIndexPath = [indexPaths objectAtIndex:0];
-        NSIndexPath *lastIndexPath  = [indexPaths lastObject];
-        NSInteger    midIndex = ((float)(firstIndexPath.row + lastIndexPath.row) / 2) + 0.5;
-        NSIndexPath *midIndexPath = [NSIndexPath indexPathForRow:midIndex inSection:firstIndexPath.section];
-        
         // Setting up properties for referencing later when touches changes
         self.startPinchingUpperPoint = upperPoint;
-        
-        if ([self.delegate respondsToSelector:@selector(gestureRecognizer:willCreateCellAtIndexPath:)]) {
-           self.addingIndexPath = [self.delegate gestureRecognizer:self willCreateCellAtIndexPath:midIndexPath];
-        } else {
-            self.addingIndexPath = midIndexPath;
-        }
-        
+
         // Creating contentInset to fulfill the whole screen, so our tableview won't occasionaly
         // bounds back to the top while we don't have enough cells on the screen
         self.tableView.contentInset = UIEdgeInsetsMake(self.tableView.frame.size.height, 0, self.tableView.frame.size.height, 0);
 
-        if (self.addingIndexPath) {
-            [self.tableView beginUpdates];
-            
-            [self.delegate gestureRecognizer:self needsAddRowAtIndexPath:self.addingIndexPath];
+        [self.tableView beginUpdates];
 
-            [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:self.addingIndexPath] withRowAnimation:UITableViewRowAnimationMiddle];
-            [self.tableView endUpdates];
-        }
-        
+        [self.delegate gestureRecognizer:self needsAddRowAtIndexPath:self.addingIndexPath];
+
+        [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:self.addingIndexPath] withRowAnimation:UITableViewRowAnimationMiddle];
+        [self.tableView endUpdates];
+
     } else if (recognizer.state == UIGestureRecognizerStateChanged) {
         
         CGFloat diffRowHeight = CGRectGetHeight(rect) - CGRectGetHeight(rect)/[recognizer scale];
@@ -408,6 +395,29 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
             NSLog(@"Should not begin pinch");
             return NO;
         }
+
+        CGPoint location1 = [gestureRecognizer locationOfTouch:0 inView:self.tableView];
+        CGPoint location2 = [gestureRecognizer locationOfTouch:1 inView:self.tableView];
+
+        CGRect  rect = (CGRect){location1, location2.x - location1.x, location2.y - location1.y};
+        NSArray *indexPaths = [self.tableView indexPathsForRowsInRect:rect];
+
+        NSIndexPath *firstIndexPath = [indexPaths objectAtIndex:0];
+        NSIndexPath *lastIndexPath  = [indexPaths lastObject];
+        NSInteger    midIndex = ((float)(firstIndexPath.row + lastIndexPath.row) / 2) + 0.5;
+        NSIndexPath *midIndexPath = [NSIndexPath indexPathForRow:midIndex inSection:firstIndexPath.section];
+
+        if ([self.delegate respondsToSelector:@selector(gestureRecognizer:willCreateCellAtIndexPath:)]) {
+            self.addingIndexPath = [self.delegate gestureRecognizer:self willCreateCellAtIndexPath:midIndexPath];
+        } else {
+            self.addingIndexPath = midIndexPath;
+        }
+
+        if ( ! self.addingIndexPath) {
+            NSLog(@"Should not begin pinch");
+            return NO;
+        }
+
     } else if (gestureRecognizer == self.longPressRecognizer) {
         
         CGPoint location = [gestureRecognizer locationInView:self.tableView];
