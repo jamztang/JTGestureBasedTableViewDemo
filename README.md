@@ -22,11 +22,11 @@ Clear for iPhone app has showed us so much we can do with a buttonless interface
 Demo
 ----
 
-<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo1.png width=175 style="border: 1px solid white;"></img>
-<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo2.png width=175 style="border: 1px solid white;"></img>
-<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo3.png width=175 style="border: 1px solid white;"></img>
-<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo4.png width=175 style="border: 1px solid white;"></img>
-<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo5.png width=175 style="border: 1px solid white;"></img>
+<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo1.png width=174 style="border: 1px solid white;"></img>
+<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo2.png width=174 style="border: 1px solid white;"></img>
+<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo3.png width=174 style="border: 1px solid white;"></img>
+<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo4.png width=174 style="border: 1px solid white;"></img>
+<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo5.png width=174 style="border: 1px solid white;"></img>
 
 
 Features
