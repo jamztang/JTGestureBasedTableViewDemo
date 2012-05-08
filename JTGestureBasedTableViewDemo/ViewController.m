@@ -91,13 +91,21 @@
                 cell.textLabel.textAlignment = UITextAlignmentCenter;
             }
             
-            // Setup tint color
-            cell.tintColor = backgroundColor;
             
             cell.finishedHeight = COMMITING_CREATE_CELL_HEIGHT;
-            if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT) {
+            if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT * 2) {
+                cell.imageView.image = [UIImage imageNamed:@"reload.png"];
+                cell.tintColor = [UIColor blackColor];
+                cell.textLabel.text = @"Return to list...";
+            } else if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT) {
+                cell.imageView.image = nil;
+                // Setup tint color
+                cell.tintColor = backgroundColor;
                 cell.textLabel.text = @"Release to create cell...";
             } else {
+                cell.imageView.image = nil;
+                // Setup tint color
+                cell.tintColor = backgroundColor;
                 cell.textLabel.text = @"Continue Pulling...";
             }
             cell.contentView.backgroundColor = [UIColor clearColor];
@@ -179,8 +187,16 @@
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsCommitRowAtIndexPath:(NSIndexPath *)indexPath {
     [self.rows replaceObjectAtIndex:indexPath.row withObject:@"Added!"];
     TransformableTableViewCell *cell = (id)[gestureRecognizer.tableView cellForRowAtIndexPath:indexPath];
-    cell.finishedHeight = NORMAL_CELL_FINISHING_HEIGHT;
-    cell.textLabel.text = @"Just Added!";
+    if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT * 2) {
+        [self.rows removeObjectAtIndex:indexPath.row];
+        [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationMiddle];
+        // Return to list
+    }
+    else {
+        cell.finishedHeight = NORMAL_CELL_FINISHING_HEIGHT;
+        cell.imageView.image = nil;
+        cell.textLabel.text = @"Just Added!";
+    }
 }
 
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsDiscardRowAtIndexPath:(NSIndexPath *)indexPath {
