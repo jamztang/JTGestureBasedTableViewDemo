@@ -110,6 +110,14 @@
     CGSize contentViewSize = self.contentView.frame.size;
     CGFloat labelHeight = self.finishedHeight;
     
+    // 05/07/2012 : Added by SungDong Kim 
+    CGSize requiredLabelSize = [self.textLabel.text sizeWithFont:self.textLabel.font
+                                               constrainedToSize:contentViewSize
+                                                   lineBreakMode:UILineBreakModeClip];
+    self.imageView.frame = CGRectMake(((contentViewSize.width - requiredLabelSize.width)/2) - self.imageView.frame.size.width - 8, 
+                                      contentViewSize.height - (labelHeight + self.imageView.frame.size.height)/2,
+                                      self.imageView.frame.size.width,
+                                      self.imageView.frame.size.height);
     // OPTI: Always accomodate 1 px to the top label to ensure two labels 
     // won't display one px gap in between sometimes for certain angles 
     self.textLabel.frame = CGRectMake(0, contentViewSize.height - labelHeight,
