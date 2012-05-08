@@ -38,6 +38,8 @@
 		52D621A814DF7F1E00400117 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52D621A614DF7F1E00400117 /* InfoPlist.strings */; };
 		52D621AB14DF7F1E00400117 /* JTGestureBasedTableViewDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D621AA14DF7F1E00400117 /* JTGestureBasedTableViewDemoTests.m */; };
 		52D621BC14DF86D600400117 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D621BB14DF86D600400117 /* QuartzCore.framework */; };
+		DFC2D1091558A13900348983 /* reload.png in Resources */ = {isa = PBXBuildFile; fileRef = DFC2D1071558A13900348983 /* reload.png */; };
+		DFC2D10A1558A13900348983 /* reload@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFC2D1081558A13900348983 /* reload@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,6 +89,8 @@
 		52D621A914DF7F1E00400117 /* JTGestureBasedTableViewDemoTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JTGestureBasedTableViewDemoTests.h; sourceTree = "<group>"; };
 		52D621AA14DF7F1E00400117 /* JTGestureBasedTableViewDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JTGestureBasedTableViewDemoTests.m; sourceTree = "<group>"; };
 		52D621BB14DF86D600400117 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		DFC2D1071558A13900348983 /* reload.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = reload.png; sourceTree = "<group>"; };
+		DFC2D1081558A13900348983 /* reload@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "reload@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -212,6 +216,7 @@
 		52D6218314DF7F1E00400117 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				DFC2D1061558A13900348983 /* Resources */,
 				52D6218414DF7F1E00400117 /* JTGestureBasedTableViewDemo-Info.plist */,
 				52D6218514DF7F1E00400117 /* InfoPlist.strings */,
 				52D6218814DF7F1E00400117 /* main.m */,
@@ -237,6 +242,15 @@
 				52D621A614DF7F1E00400117 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		DFC2D1061558A13900348983 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				DFC2D1071558A13900348983 /* reload.png */,
+				DFC2D1081558A13900348983 /* reload@2x.png */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -340,6 +354,8 @@
 				52D6218714DF7F1E00400117 /* InfoPlist.strings in Resources */,
 				52D6219314DF7F1E00400117 /* ViewController_iPhone.xib in Resources */,
 				52D6219614DF7F1E00400117 /* ViewController_iPad.xib in Resources */,
+				DFC2D1091558A13900348983 /* reload.png in Resources */,
+				DFC2D10A1558A13900348983 /* reload@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
