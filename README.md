@@ -22,21 +22,24 @@ Clear for iPhone app has showed us so much we can do with a buttonless interface
 Demo
 ----
 
-<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo1.png width=210 style="border: 1px solid white;"></img>
-<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo2.png width=210 style="border: 1px solid white;"></img>
-<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo3.png width=210 style="border: 1px solid white;"></img>
-<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo4.png width=210 style="border: 1px solid white;"></img>
+<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo1.png width=175 style="border: 1px solid white;"></img>
+<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo2.png width=175 style="border: 1px solid white;"></img>
+<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo3.png width=175 style="border: 1px solid white;"></img>
+<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo4.png width=175 style="border: 1px solid white;"></img>
+<img src=https://github.com/mystcolor/JTGestureBasedTableViewDemo/raw/master/demo5.png width=175 style="border: 1px solid white;"></img>
 
 
 Features
 --------
 
-It only supports three features at the moment.
+It only supports few features at the moment.
 
 - Pull down to add cell
 - Pinch to create cell
 - Panning on cell gesture
 - Long hold to reorder cell
+- Pull to return to List (Thanks [SungDong Kim][] for making this happen)
+
 
 How To Use It
 -------------
@@ -137,4 +140,6 @@ License
 This project is under MIT License, please feel free to contribute and use it.
 
 James
+
+[SungDong Kim]:https://github.com/acroedit
 
