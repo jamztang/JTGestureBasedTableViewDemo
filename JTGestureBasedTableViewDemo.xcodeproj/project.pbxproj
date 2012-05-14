@@ -21,6 +21,8 @@
 		1AA68A7214FA44B9009145F3 /* NSObject+JTGestureBasedTableViewHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B4AC6414EB47AC006574B9 /* NSObject+JTGestureBasedTableViewHelper.m */; };
 		1AA68A7314FA44CC009145F3 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D621BB14DF86D600400117 /* QuartzCore.framework */; };
 		1AA68A7514FA4765009145F3 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D6218F14DF7F1E00400117 /* ViewController.m */; };
+		1AFD9023156121EF0088C0F6 /* JTCollapsingGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFD9022156121EF0088C0F6 /* JTCollapsingGestureRecognizer.m */; };
+		1AFD902715616BC50088C0F6 /* UIGestureRecognizer+JTGestureRecognizerHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFD902615616BC50088C0F6 /* UIGestureRecognizer+JTGestureRecognizerHelper.m */; };
 		5296DB0C14E977C20044BD53 /* JTTableViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5296DB0914E977C20044BD53 /* JTTableViewGestureRecognizer.m */; };
 		5296DB0D14E977C20044BD53 /* TransformableTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5296DB0B14E977C20044BD53 /* TransformableTableViewCell.m */; };
 		52B4AC6514EB47AC006574B9 /* NSObject+JTGestureBasedTableViewHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B4AC6414EB47AC006574B9 /* NSObject+JTGestureBasedTableViewHelper.m */; };
@@ -63,11 +65,15 @@
 		1AA68A6014FA443D009145F3 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		1AA68A6314FA443D009145F3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
 		1AA68A6614FA443D009145F3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPad.storyboard; sourceTree = "<group>"; };
+		1AFD9021156121EF0088C0F6 /* JTCollapsingGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTCollapsingGestureRecognizer.h; sourceTree = "<group>"; };
+		1AFD9022156121EF0088C0F6 /* JTCollapsingGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JTCollapsingGestureRecognizer.m; sourceTree = "<group>"; };
+		1AFD902515616BC50088C0F6 /* UIGestureRecognizer+JTGestureRecognizerHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIGestureRecognizer+JTGestureRecognizerHelper.h"; sourceTree = "<group>"; };
+		1AFD902615616BC50088C0F6 /* UIGestureRecognizer+JTGestureRecognizerHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIGestureRecognizer+JTGestureRecognizerHelper.m"; sourceTree = "<group>"; };
 		5296DB0814E977C20044BD53 /* JTTableViewGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTTableViewGestureRecognizer.h; sourceTree = "<group>"; };
 		5296DB0914E977C20044BD53 /* JTTableViewGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JTTableViewGestureRecognizer.m; sourceTree = "<group>"; };
 		5296DB0A14E977C20044BD53 /* TransformableTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformableTableViewCell.h; sourceTree = "<group>"; };
 		5296DB0B14E977C20044BD53 /* TransformableTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransformableTableViewCell.m; sourceTree = "<group>"; };
-		52B4AC6314EB47AC006574B9 /* NSObject+JTGestureBasedTableViewHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; path = "NSObject+JTGestureBasedTableViewHelper.h"; sourceTree = "<group>"; };
+		52B4AC6314EB47AC006574B9 /* NSObject+JTGestureBasedTableViewHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+JTGestureBasedTableViewHelper.h"; sourceTree = "<group>"; };
 		52B4AC6414EB47AC006574B9 /* NSObject+JTGestureBasedTableViewHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+JTGestureBasedTableViewHelper.m"; sourceTree = "<group>"; };
 		52D6217814DF7F1E00400117 /* JTGestureBasedTableViewDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JTGestureBasedTableViewDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		52D6217C14DF7F1E00400117 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -160,6 +166,10 @@
 				5296DB0B14E977C20044BD53 /* TransformableTableViewCell.m */,
 				52B4AC6314EB47AC006574B9 /* NSObject+JTGestureBasedTableViewHelper.h */,
 				52B4AC6414EB47AC006574B9 /* NSObject+JTGestureBasedTableViewHelper.m */,
+				1AFD902515616BC50088C0F6 /* UIGestureRecognizer+JTGestureRecognizerHelper.h */,
+				1AFD902615616BC50088C0F6 /* UIGestureRecognizer+JTGestureRecognizerHelper.m */,
+				1AFD9021156121EF0088C0F6 /* JTCollapsingGestureRecognizer.h */,
+				1AFD9022156121EF0088C0F6 /* JTCollapsingGestureRecognizer.m */,
 			);
 			path = JTGestureBasedTableView;
 			sourceTree = "<group>";
@@ -399,6 +409,8 @@
 				5296DB0D14E977C20044BD53 /* TransformableTableViewCell.m in Sources */,
 				52B4AC6514EB47AC006574B9 /* NSObject+JTGestureBasedTableViewHelper.m in Sources */,
 				1AA54AFF1506313B0077B7D3 /* ListViewController.m in Sources */,
+				1AFD9023156121EF0088C0F6 /* JTCollapsingGestureRecognizer.m in Sources */,
+				1AFD902715616BC50088C0F6 /* UIGestureRecognizer+JTGestureRecognizerHelper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

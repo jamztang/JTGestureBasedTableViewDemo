@@ -19,9 +19,3 @@
 - (UIImage *)snapshot;
 @end
 
-
-
-@interface UIGestureRecognizer (JTGestureBasedTableViewHelper)
-- (CGPoint)topPoint;
-- (CGPoint)bottomPoint;
-@end

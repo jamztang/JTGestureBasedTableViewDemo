@@ -8,6 +8,8 @@
 
 #import "JTTableViewGestureRecognizer.h"
 #import "NSObject+JTGestureBasedTableViewHelper.h"
+#import "UIGestureRecognizer+JTGestureRecognizerHelper.h"
+#import "JTCollapsingGestureRecognizer.h"
 #import <QuartzCore/QuartzCore.h>
 
 @protocol JTTableViewGestureDelegate <
@@ -210,26 +212,17 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
     }
 }
 
-- (void)pinchInGestureRecognizer:(UIPinchGestureRecognizer *)recognizer {
-    NSLog(@"%@", recognizer);
-    
+- (void)pinchInGestureRecognizer:(JTCollapsingGestureRecognizer *)recognizer {
+    NSLog(@"collapsingGesture %@ %@", NSStringFromCGPoint(recognizer.translation), NSStringFromCGSize(recognizer.distanceDifference));
+
     if (recognizer.state == UIGestureRecognizerStateBegan) {
         self.state = JTTableViewGestureRecognizerStatePinching;
-        self.startPinchingUpperPoint = [recognizer topPoint];
 
     } else if (recognizer.state == UIGestureRecognizerStateChanged) {
-
-        CGPoint currentPoint = [recognizer topPoint];
-        CGFloat scale = [recognizer scale];
-
-        CGFloat currentFingerDistance = [recognizer bottomPoint].y - currentPoint.y;
-        CGFloat absoluteDistanceDiff = currentFingerDistance/scale - currentFingerDistance;
-
-
-
-        if (scale > 1) {
+        CGFloat distanceDiff = 0;
+        if (recognizer.scale > 1) {
             // Prevent cell translated too apart
-            absoluteDistanceDiff = 0;
+            distanceDiff = 0;
         } else {
             // Prevent cell collapsed underflow
             CGFloat firstVisibleRowHeight = self.tableView.rowHeight;
@@ -237,45 +230,27 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
                 NSIndexPath *indexPath = [[self.tableView indexPathsForVisibleRows] objectAtIndex:0];
                 firstVisibleRowHeight = [self.tableViewDelegate tableView:self.tableView heightForRowAtIndexPath:indexPath];
             }
-            absoluteDistanceDiff = MIN(firstVisibleRowHeight, absoluteDistanceDiff);
+            distanceDiff = MAX(-firstVisibleRowHeight, recognizer.distanceDifference.height);
         }
 
         NSArray *cells = [self.tableView visibleCells];
         for (int i = 0; i < [cells count]; i++) {
             UITableViewCell *cell = [cells objectAtIndex:i];
-            
-            cell.transform = CGAffineTransformMakeTranslation(0, -absoluteDistanceDiff * i + currentPoint.y - self.startPinchingUpperPoint.y);
+            cell.transform = CGAffineTransformMakeTranslation(0, distanceDiff * i + recognizer.translation.y);
         }
-
     } else if (recognizer.state == UIGestureRecognizerStateEnded) {
-        CGPoint currentPoint = [recognizer topPoint];
-        CGFloat scale = [recognizer scale];
-        CGFloat currentFingerDistance = [recognizer bottomPoint].y - currentPoint.y;
-        CGFloat absoluteDistanceDiff = currentFingerDistance/scale - currentFingerDistance;
-        
-        CGFloat firstVisibleRowHeight = self.tableView.rowHeight;
-        if ([self.tableViewDelegate respondsToSelector:@selector(tableView:heightForRowAtIndexPath:)]) {
-            NSIndexPath *indexPath = [[self.tableView indexPathsForVisibleRows] objectAtIndex:0];
-            firstVisibleRowHeight = [self.tableViewDelegate tableView:self.tableView heightForRowAtIndexPath:indexPath];
+        [UIView beginAnimations:@"restoreCellAnimation" context:nil];
+        [UIView setAnimationDuration:JTTableViewRowAnimationDuration];
+
+        self.tableView.transform = CGAffineTransformIdentity;
+
+        NSArray *cells = [self.tableView visibleCells];
+        for (int i = 0; i < [cells count]; i++) {
+            UITableViewCell *cell = [cells objectAtIndex:i];
+            cell.transform = CGAffineTransformIdentity;
         }
+        [UIView commitAnimations];
 
-        if (absoluteDistanceDiff >= firstVisibleRowHeight) {
-            [self.delegate gestureRecognizerDidCommitPinchIn:self];
-        } else {
-            [UIView beginAnimations:@"restoreCellAnimation" context:nil];
-            [UIView setAnimationDuration:JTTableViewRowAnimationDuration];
-
-            self.tableView.transform = CGAffineTransformIdentity;
-
-            NSArray *cells = [self.tableView visibleCells];
-            for (int i = 0; i < [cells count]; i++) {
-                UITableViewCell *cell = [cells objectAtIndex:i];
-                cell.transform = CGAffineTransformIdentity;
-            }
-            [UIView commitAnimations];
-        }
-
-        self.startPinchingUpperPoint = CGPointZero;
         self.state = JTTableViewGestureRecognizerStateNone;
     }
 }
@@ -606,7 +581,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
     pinch.delegate             = recognizer;
     recognizer.pinchRecognizer = pinch;
 
-    UIPinchGestureRecognizer *pinchIn = [[UIPinchGestureRecognizer alloc] initWithTarget:recognizer action:@selector(pinchInGestureRecognizer:)];
+    JTCollapsingGestureRecognizer *pinchIn = [[JTCollapsingGestureRecognizer alloc] initWithTarget:recognizer action:@selector(pinchInGestureRecognizer:)];
     [tableView addGestureRecognizer:pinchIn];
     pinchIn.delegate             = recognizer;
     recognizer.pinchInRecognizer = pinchIn;
