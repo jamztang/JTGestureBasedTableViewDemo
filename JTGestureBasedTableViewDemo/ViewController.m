@@ -147,6 +147,11 @@
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
             cell.textLabel.adjustsFontSizeToFitWidth = YES;
             cell.textLabel.backgroundColor = [UIColor clearColor];
+            
+            cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+            cell.backgroundView = [[UIView alloc] initWithFrame:cell.bounds];
+            cell.backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+            cell.backgroundView.backgroundColor = [UIColor whiteColor];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
 
