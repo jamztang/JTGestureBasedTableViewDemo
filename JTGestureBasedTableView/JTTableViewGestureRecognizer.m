@@ -209,10 +209,12 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
         UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
 
         CGPoint translation = [recognizer translationInView:self.tableView];
-        cell.contentView.frame = CGRectOffset(cell.contentView.bounds, translation.x, 0);
+        // Translate the whole cell instead of just the contentView so the 
+        // backgroundView and the accessoryView will also translates
+        cell.frame = CGRectOffset(cell.bounds, translation.x, cell.frame.origin.y);
 
-        if ([self.delegate respondsToSelector:@selector(gestureRecognizer:didChangeContentViewTranslation:forRowAtIndexPath:)]) {
-            [self.delegate gestureRecognizer:self didChangeContentViewTranslation:translation forRowAtIndexPath:indexPath];
+        if ([self.delegate respondsToSelector:@selector(gestureRecognizer:didChangeCellTranslation:forRowAtIndexPath:)]) {
+            [self.delegate gestureRecognizer:self didChangeCellTranslation:translation forRowAtIndexPath:indexPath];
         }
         
         CGFloat commitEditingLength = JTTableViewCommitEditingRowDefaultLength;
@@ -254,7 +256,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
             }
         } else {
             [UIView beginAnimations:@"" context:nil];
-            cell.contentView.frame = cell.contentView.bounds;
+            cell.frame = CGRectOffset(cell.bounds, 0, cell.frame.origin.y);
             [UIView commitAnimations];
         }
         

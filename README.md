@@ -109,7 +109,7 @@ Include all header and implementation files in JTGestureBasedTabeView/ into your
     @optional
 
     - (CGFloat)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer lengthForCommitEditingRowAtIndexPath:(NSIndexPath *)indexPath;
-    - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer didChangeContentViewTranslation:(CGPoint)translation forRowAtIndexPath:(NSIndexPath *)indexPath;
+    - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer didChangeCellTranslation:(CGPoint)translation forRowAtIndexPath:(NSIndexPath *)indexPath;
 
     @end
 

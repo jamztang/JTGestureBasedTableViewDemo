@@ -68,7 +68,10 @@ extern CGFloat const JTTableViewRowAnimationDuration;
 @optional
 
 - (CGFloat)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer lengthForCommitEditingRowAtIndexPath:(NSIndexPath *)indexPath;
-- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer didChangeContentViewTranslation:(CGPoint)translation forRowAtIndexPath:(NSIndexPath *)indexPath;
+- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer didChangeCellTranslation:(CGPoint)translation forRowAtIndexPath:(NSIndexPath *)indexPath;
+
+// Depreciated and non functional
+- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer didChangeContentViewTranslation:(CGPoint)translation forRowAtIndexPath:(NSIndexPath *)indexPath __deprecated;
 
 @end
 
