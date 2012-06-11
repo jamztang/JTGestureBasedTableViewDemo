@@ -26,7 +26,7 @@ extern CGFloat const JTTableViewRowAnimationDuration;
 
 @interface JTTableViewGestureRecognizer : NSObject <UITableViewDelegate>
 
-@property (nonatomic, assign, readonly) UITableView *tableView;
+@property (nonatomic, weak, readonly) UITableView *tableView;
 
 + (JTTableViewGestureRecognizer *)gestureRecognizerWithTableView:(UITableView *)tableView delegate:(id)delegate;
 

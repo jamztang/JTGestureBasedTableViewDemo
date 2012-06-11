@@ -5,6 +5,7 @@ An iOS objective-c library template to recreate the gesture based interaction fo
 
 This project is aimed to be a truely flexible solution, but currently it's still in development stage and missing a few features.
 
+The library now requires iOS 5.0 with ARC, please use -fobjc-arc compiler flag to add support for non-ARC projects.
 
 Known Issues
 ------------

@@ -21,20 +21,20 @@ CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
 CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough guess is 0.25
 
 @interface JTTableViewGestureRecognizer () <UIGestureRecognizerDelegate>
-@property (nonatomic, assign) id <JTTableViewGestureAddingRowDelegate, JTTableViewGestureEditingRowDelegate, JTTableViewGestureMoveRowDelegate> delegate;
-@property (nonatomic, assign) id <UITableViewDelegate>   tableViewDelegate;
-@property (nonatomic, assign) UITableView               *tableView;
-@property (nonatomic, assign) CGFloat                    addingRowHeight;
-@property (nonatomic, retain) NSIndexPath               *addingIndexPath;
-@property (nonatomic, assign) JTTableViewCellEditingState  addingCellState;
-@property (nonatomic, assign) CGPoint                    startPinchingUpperPoint;
-@property (nonatomic, retain) UIPinchGestureRecognizer  *pinchRecognizer;
-@property (nonatomic, retain) UIPanGestureRecognizer    *panRecognizer;
-@property (nonatomic, retain) UILongPressGestureRecognizer    *longPressRecognizer;
+@property (nonatomic, weak) id <JTTableViewGestureAddingRowDelegate, JTTableViewGestureEditingRowDelegate, JTTableViewGestureMoveRowDelegate> delegate;
+@property (nonatomic, weak) id <UITableViewDelegate>         tableViewDelegate;
+@property (nonatomic, weak) UITableView                     *tableView;
+@property (nonatomic, assign) CGFloat                        addingRowHeight;
+@property (nonatomic, strong) NSIndexPath                   *addingIndexPath;
+@property (nonatomic, assign) JTTableViewCellEditingState    addingCellState;
+@property (nonatomic, assign) CGPoint                        startPinchingUpperPoint;
+@property (nonatomic, strong) UIPinchGestureRecognizer      *pinchRecognizer;
+@property (nonatomic, strong) UIPanGestureRecognizer        *panRecognizer;
+@property (nonatomic, strong) UILongPressGestureRecognizer  *longPressRecognizer;
 @property (nonatomic, assign) JTTableViewGestureRecognizerState state;
-@property (nonatomic, retain) UIImage                   *cellSnapshot;
-@property (nonatomic, assign) CGFloat                    scrollingRate;
-@property (nonatomic, strong) NSTimer                   *movingTimer;
+@property (nonatomic, strong) UIImage                       *cellSnapshot;
+@property (nonatomic, assign) CGFloat                        scrollingRate;
+@property (nonatomic, strong) NSTimer                       *movingTimer;
 
 - (void)updateAddingIndexPathForCurrentLocation;
 - (void)commitOrDiscardCell;
@@ -307,12 +307,12 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
     } else if (recognizer.state == UIGestureRecognizerStateEnded) {
         // While long press ends, we remove the snapshot imageView
         
-        __block UIImageView *snapShotView = (UIImageView *)[self.tableView viewWithTag:CELL_SNAPSHOT_TAG];
-        __block JTTableViewGestureRecognizer *weakSelf = self;
+        __block __weak UIImageView *snapShotView = (UIImageView *)[self.tableView viewWithTag:CELL_SNAPSHOT_TAG];
+        __block __weak JTTableViewGestureRecognizer *weakSelf = self;
         
         // We use self.addingIndexPath directly to make sure we dropped on a valid indexPath
         // which we've already ensure while UIGestureRecognizerStateChanged
-        __block NSIndexPath *indexPath = self.addingIndexPath;
+        __block __weak NSIndexPath *indexPath = self.addingIndexPath;
         
         // Stop timer
         [self.movingTimer invalidate]; self.movingTimer = nil;

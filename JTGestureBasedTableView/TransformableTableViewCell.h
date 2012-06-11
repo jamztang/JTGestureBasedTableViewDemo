@@ -17,7 +17,7 @@ typedef enum {
 @protocol TransformableTableViewCell <NSObject>
 
 @property (nonatomic, assign) CGFloat  finishedHeight;
-@property (nonatomic, retain) UIColor *tintColor;   // default is white color
+@property (nonatomic, strong) UIColor *tintColor;   // default is white color
 
 @end
 
