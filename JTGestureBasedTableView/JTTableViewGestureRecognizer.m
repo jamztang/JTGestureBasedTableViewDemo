@@ -31,6 +31,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
 @property (nonatomic, strong) UIPinchGestureRecognizer      *pinchRecognizer;
 @property (nonatomic, strong) UIPanGestureRecognizer        *panRecognizer;
 @property (nonatomic, strong) UILongPressGestureRecognizer  *longPressRecognizer;
+@property (nonatomic, strong) UITapGestureRecognizer        *tapGestureRecognizer;
 @property (nonatomic, assign) JTTableViewGestureRecognizerState state;
 @property (nonatomic, strong) UIImage                       *cellSnapshot;
 @property (nonatomic, assign) CGFloat                        scrollingRate;
@@ -46,7 +47,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
 @implementation JTTableViewGestureRecognizer
 @synthesize delegate, tableView, tableViewDelegate;
 @synthesize addingIndexPath, startPinchingUpperPoint, addingRowHeight;
-@synthesize pinchRecognizer, panRecognizer, longPressRecognizer;
+@synthesize pinchRecognizer, panRecognizer, longPressRecognizer, tapGestureRecognizer;
 @synthesize state, addingCellState;
 @synthesize cellSnapshot, scrollingRate, movingTimer;
 
@@ -364,6 +365,22 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
     }
 }
 
+- (void) tapRecognizer:(UITapGestureRecognizer *) recognizer {
+    if(recognizer.state == UIGestureRecognizerStateRecognized){
+        CGPoint point = [recognizer locationInView:self.tableView];
+        NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
+        if(!indexPath){
+            self.addingIndexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+            [self.tableView beginUpdates];
+            [self.delegate gestureRecognizer:self needsAddRowAtIndexPath:self.addingIndexPath];
+            [self.tableView reloadData];
+            [self.delegate gestureRecognizer:self needsCommitRowAtIndexPath:self.addingIndexPath];
+            [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:self.addingIndexPath] withRowAnimation:UITableViewRowAnimationNone];
+            [self.tableView endUpdates];
+        }
+    }
+}
+
 #pragma mark UIGestureRecognizer
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
@@ -523,6 +540,10 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
 #pragma mark Class method
 
 + (JTTableViewGestureRecognizer *)gestureRecognizerWithTableView:(UITableView *)tableView delegate:(id)delegate {
+    tableView.clipsToBounds = NO;
+    UIView *new = [[UIView alloc] initWithFrame:CGRectMake(0, -40, 320, 40)];
+    [tableView addSubview:new];
+    
     JTTableViewGestureRecognizer *recognizer = [[JTTableViewGestureRecognizer alloc] init];
     recognizer.delegate             = (id)delegate;
     recognizer.tableView            = tableView;
@@ -543,7 +564,13 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
     [tableView addGestureRecognizer:longPress];
     longPress.delegate              = recognizer;
     recognizer.longPressRecognizer  = longPress;
-
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:recognizer
+                                                                          action:@selector(tapRecognizer:)];
+    [tableView addGestureRecognizer:tap];
+    tap.delegate = recognizer;
+    recognizer.tapGestureRecognizer = tap;
+    
     return recognizer;
 }
 
