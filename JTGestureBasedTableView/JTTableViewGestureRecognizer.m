@@ -101,36 +101,38 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
 #pragma mark Logic
 
 - (void)commitOrDiscardCell {
-    UITableViewCell *cell = (UITableViewCell *)[self.tableView cellForRowAtIndexPath:self.addingIndexPath];
-    [self.tableView beginUpdates];
-    
-    
-    CGFloat commitingCellHeight = self.tableView.rowHeight;
-    if ([self.delegate respondsToSelector:@selector(gestureRecognizer:heightForCommittingRowAtIndexPath:)]) {
-        commitingCellHeight = [self.delegate gestureRecognizer:self
+    if (self.addingIndexPath) {
+        UITableViewCell *cell = (UITableViewCell *)[self.tableView cellForRowAtIndexPath:self.addingIndexPath];
+        [self.tableView beginUpdates];
+        
+        
+        CGFloat commitingCellHeight = self.tableView.rowHeight;
+        if ([self.delegate respondsToSelector:@selector(gestureRecognizer:heightForCommittingRowAtIndexPath:)]) {
+            commitingCellHeight = [self.delegate gestureRecognizer:self
                                  heightForCommittingRowAtIndexPath:self.addingIndexPath];
+        }
+        
+        if (cell.frame.size.height >= commitingCellHeight) {
+            [self.delegate gestureRecognizer:self needsCommitRowAtIndexPath:self.addingIndexPath];
+        } else {
+            [self.delegate gestureRecognizer:self needsDiscardRowAtIndexPath:self.addingIndexPath];
+            [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:self.addingIndexPath] withRowAnimation:UITableViewRowAnimationMiddle];
+        }
+        
+        // We would like to reload other rows as well
+        [self.tableView performSelector:@selector(reloadVisibleRowsExceptIndexPath:) withObject:self.addingIndexPath afterDelay:JTTableViewRowAnimationDuration];
+        
+        self.addingIndexPath = nil;
+        [self.tableView endUpdates];
+        
+        // Restore contentInset while touch ends
+        [UIView beginAnimations:@"" context:nil];
+        [UIView setAnimationBeginsFromCurrentState:YES];
+        [UIView setAnimationDuration:0.5];  // Should not be less than the duration of row animation
+        self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+        [UIView commitAnimations];
+        
     }
-    
-    if (cell.frame.size.height >= commitingCellHeight) {
-        [self.delegate gestureRecognizer:self needsCommitRowAtIndexPath:self.addingIndexPath];
-    } else {
-        [self.delegate gestureRecognizer:self needsDiscardRowAtIndexPath:self.addingIndexPath];
-        [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:self.addingIndexPath] withRowAnimation:UITableViewRowAnimationMiddle];
-    }
-    
-    // We would like to reload other rows as well
-    [self.tableView performSelector:@selector(reloadVisibleRowsExceptIndexPath:) withObject:self.addingIndexPath afterDelay:JTTableViewRowAnimationDuration];
-
-    self.addingIndexPath = nil;
-    [self.tableView endUpdates];
-    
-    // Restore contentInset while touch ends
-    [UIView beginAnimations:@"" context:nil];
-    [UIView setAnimationBeginsFromCurrentState:YES];
-    [UIView setAnimationDuration:0.5];  // Should not be less than the duration of row animation 
-    self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
-    [UIView commitAnimations];
-    
     self.state = JTTableViewGestureRecognizerStateNone;
 }
 
@@ -473,15 +475,20 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
                 self.addingIndexPath = [self.delegate gestureRecognizer:self willCreateCellAtIndexPath:self.addingIndexPath];
             }
 
-            [self.tableView beginUpdates];
-            [self.delegate gestureRecognizer:self needsAddRowAtIndexPath:self.addingIndexPath];
-            [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:self.addingIndexPath] withRowAnimation:UITableViewRowAnimationNone];
-            self.addingRowHeight = fabsf(scrollView.contentOffset.y);
-            [self.tableView endUpdates];
+            if (self.addingIndexPath) {
+                [self.tableView beginUpdates];
+                [self.delegate gestureRecognizer:self needsAddRowAtIndexPath:self.addingIndexPath];
+                [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:self.addingIndexPath] withRowAnimation:UITableViewRowAnimationNone];
+
+                self.addingRowHeight = fabsf(scrollView.contentOffset.y);
+                [self.tableView endUpdates];
+            }
         }
     }
-    
-    if (self.state == JTTableViewGestureRecognizerStateDragging) {
+
+    // Check if addingIndexPath not exists, we don't want to
+    // alter the contentOffset of our scrollView
+    if (self.addingIndexPath && self.state == JTTableViewGestureRecognizerStateDragging) {
         self.addingRowHeight += scrollView.contentOffset.y * -1;
         [self.tableView reloadData];
         [scrollView setContentOffset:CGPointZero];
