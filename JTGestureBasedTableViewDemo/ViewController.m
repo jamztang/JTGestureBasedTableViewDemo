@@ -187,7 +187,9 @@
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsCommitRowAtIndexPath:(NSIndexPath *)indexPath {
     [self.rows replaceObjectAtIndex:indexPath.row withObject:@"Added!"];
     TransformableTableViewCell *cell = (id)[gestureRecognizer.tableView cellForRowAtIndexPath:indexPath];
-    if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT * 2) {
+
+    BOOL isFirstCell = indexPath.section == 0 && indexPath.row == 0;
+    if (isFirstCell && cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT * 2) {
         [self.rows removeObjectAtIndex:indexPath.row];
         [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationMiddle];
         // Return to list
