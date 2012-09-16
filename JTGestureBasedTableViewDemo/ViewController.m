@@ -17,6 +17,9 @@
 @property (nonatomic, strong) NSMutableArray *rows;
 @property (nonatomic, strong) JTTableViewGestureRecognizer *tableViewRecognizer;
 @property (nonatomic, strong) id grabbedObject;
+
+- (void)moveRowToBottomForIndexPath:(NSIndexPath *)indexPath;
+
 @end
 
 @implementation ViewController
@@ -58,6 +61,23 @@
     self.tableView.backgroundColor = [UIColor blackColor];
     self.tableView.separatorStyle  = UITableViewCellSeparatorStyleNone;
     self.tableView.rowHeight       = NORMAL_CELL_FINISHING_HEIGHT;
+}
+
+#pragma mark Private Method
+
+- (void)moveRowToBottomForIndexPath:(NSIndexPath *)indexPath {
+    [self.tableView beginUpdates];
+    
+    id object = [self.rows objectAtIndex:indexPath.row];
+    [self.rows removeObjectAtIndex:indexPath.row];
+    [self.rows addObject:object];
+
+    NSIndexPath *lastIndexPath = [NSIndexPath indexPathForRow:[self.rows count] - 1 inSection:0];
+    [self.tableView moveRowAtIndexPath:indexPath toIndexPath:lastIndexPath];
+
+    [self.tableView endUpdates];
+
+    [self.tableView performSelector:@selector(reloadVisibleRowsExceptIndexPath:) withObject:lastIndexPath afterDelay:JTTableViewRowAnimationDuration];
 }
 
 #pragma mark UITableViewDatasource
@@ -243,6 +263,10 @@
 
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer commitEditingState:(JTTableViewCellEditingState)state forRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableView *tableView = gestureRecognizer.tableView;
+    
+    
+    NSIndexPath *rowToBeMovedToBottom = nil;
+
     [tableView beginUpdates];
     if (state == JTTableViewCellEditingStateLeft) {
         // An example to discard the cell at JTTableViewCellEditingStateLeft
@@ -252,14 +276,20 @@
         // An example to retain the cell at commiting at JTTableViewCellEditingStateRight
         [self.rows replaceObjectAtIndex:indexPath.row withObject:DONE_CELL];
         [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+        rowToBeMovedToBottom = indexPath;
     } else {
         // JTTableViewCellEditingStateMiddle shouldn't really happen in
         // - [JTTableViewGestureDelegate gestureRecognizer:commitEditingState:forRowAtIndexPath:]
     }
     [tableView endUpdates];
 
+
     // Row color needs update after datasource changes, reload it.
     [tableView performSelector:@selector(reloadVisibleRowsExceptIndexPath:) withObject:indexPath afterDelay:JTTableViewRowAnimationDuration];
+
+    if (rowToBeMovedToBottom) {
+        [self performSelector:@selector(moveRowToBottomForIndexPath:) withObject:rowToBeMovedToBottom afterDelay:JTTableViewRowAnimationDuration * 2];
+    }
 }
 
 #pragma mark JTTableViewGestureMoveRowDelegate
