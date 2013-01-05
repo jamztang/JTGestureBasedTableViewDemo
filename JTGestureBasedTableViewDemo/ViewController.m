@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "TransformableTableViewCell.h"
+#import "JTTransformableTableViewCell.h"
 #import "JTTableViewGestureRecognizer.h"
 #import "UIColor+JTGestureBasedTableViewHelper.h"
 
@@ -96,7 +96,7 @@
     UIColor *backgroundColor = [[UIColor redColor] colorWithHueOffset:0.12 * indexPath.row / [self tableView:tableView numberOfRowsInSection:indexPath.section]];
     if ([object isEqual:ADDING_CELL]) {
         NSString *cellIdentifier = nil;
-        TransformableTableViewCell *cell = nil;
+        JTTransformableTableViewCell *cell = nil;
 
         // IndexPath.row == 0 is the case we wanted to pick the pullDown style
         if (indexPath.row == 0) {
@@ -104,11 +104,10 @@
             cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
             
             if (cell == nil) {
-                cell = [TransformableTableViewCell transformableTableViewCellWithStyle:TransformableTableViewCellStylePullDown
+                cell = [JTTransformableTableViewCell transformableTableViewCellWithStyle:JTTransformableTableViewCellStylePullDown
                                                                        reuseIdentifier:cellIdentifier];
                 cell.textLabel.adjustsFontSizeToFitWidth = YES;
                 cell.textLabel.textColor = [UIColor whiteColor];
-                cell.textLabel.textAlignment = UITextAlignmentCenter;
             }
             
             
@@ -129,7 +128,8 @@
                 cell.textLabel.text = @"Continue Pulling...";
             }
             cell.contentView.backgroundColor = [UIColor clearColor];
-            cell.detailTextLabel.text = @" ";
+            cell.textLabel.shadowOffset = CGSizeMake(0, 1);
+            cell.textLabel.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.6];
             return cell;
 
         } else {
@@ -138,11 +138,10 @@
             cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 
             if (cell == nil) {
-                cell = [TransformableTableViewCell transformableTableViewCellWithStyle:TransformableTableViewCellStyleUnfolding
+                cell = [JTTransformableTableViewCell transformableTableViewCellWithStyle:JTTransformableTableViewCellStyleUnfolding
                                                                        reuseIdentifier:cellIdentifier];
                 cell.textLabel.adjustsFontSizeToFitWidth = YES;
                 cell.textLabel.textColor = [UIColor whiteColor];
-                cell.textLabel.textAlignment = UITextAlignmentCenter;
             }
             
             // Setup tint color
@@ -155,7 +154,8 @@
                 cell.textLabel.text = @"Continue Pinching...";
             }
             cell.contentView.backgroundColor = [UIColor clearColor];
-            cell.detailTextLabel.text = @" ";
+            cell.textLabel.shadowOffset = CGSizeMake(0, 1);
+            cell.textLabel.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.6];
             return cell;
         }
     
@@ -171,7 +171,6 @@
         }
 
         cell.textLabel.text = [NSString stringWithFormat:@"%@", (NSString *)object];
-        cell.detailTextLabel.text = @" ";
         if ([object isEqual:DONE_CELL]) {
             cell.textLabel.textColor = [UIColor grayColor];
             cell.contentView.backgroundColor = [UIColor darkGrayColor];
@@ -182,9 +181,11 @@
             cell.textLabel.textColor = [UIColor whiteColor];
             cell.contentView.backgroundColor = backgroundColor;
         }
+        cell.textLabel.shadowOffset = CGSizeMake(0, 1);
+        cell.textLabel.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.6];
+        
         return cell;
     }
-
 }
 
 #pragma mark UITableViewDelegate
@@ -206,7 +207,7 @@
 
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsCommitRowAtIndexPath:(NSIndexPath *)indexPath {
     [self.rows replaceObjectAtIndex:indexPath.row withObject:@"Added!"];
-    TransformableTableViewCell *cell = (id)[gestureRecognizer.tableView cellForRowAtIndexPath:indexPath];
+    JTTransformableTableViewCell *cell = (id)[gestureRecognizer.tableView cellForRowAtIndexPath:indexPath];
 
     BOOL isFirstCell = indexPath.section == 0 && indexPath.row == 0;
     if (isFirstCell && cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT * 2) {
@@ -251,8 +252,8 @@
             break;
     }
     cell.contentView.backgroundColor = backgroundColor;
-    if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
-        ((TransformableTableViewCell *)cell).tintColor = backgroundColor;
+    if ([cell isKindOfClass:[JTTransformableTableViewCell class]]) {
+        ((JTTransformableTableViewCell *)cell).tintColor = backgroundColor;
     }
 }
 
