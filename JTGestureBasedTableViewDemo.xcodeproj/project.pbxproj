@@ -16,12 +16,12 @@
 		1AA68A6414FA443D009145F3 /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1AA68A6214FA443D009145F3 /* MainStoryboard_iPhone.storyboard */; };
 		1AA68A6714FA443D009145F3 /* MainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1AA68A6514FA443D009145F3 /* MainStoryboard_iPad.storyboard */; };
 		1AA68A7014FA44B9009145F3 /* JTTableViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5296DB0914E977C20044BD53 /* JTTableViewGestureRecognizer.m */; };
-		1AA68A7114FA44B9009145F3 /* TransformableTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5296DB0B14E977C20044BD53 /* TransformableTableViewCell.m */; };
+		1AA68A7114FA44B9009145F3 /* JTTransformableTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5296DB0B14E977C20044BD53 /* JTTransformableTableViewCell.m */; };
 		1AA68A7214FA44B9009145F3 /* UIColor+JTGestureBasedTableViewHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B4AC6414EB47AC006574B9 /* UIColor+JTGestureBasedTableViewHelper.m */; };
 		1AA68A7314FA44CC009145F3 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D621BB14DF86D600400117 /* QuartzCore.framework */; };
 		1AA68A7514FA4765009145F3 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D6218F14DF7F1E00400117 /* ViewController.m */; };
 		5296DB0C14E977C20044BD53 /* JTTableViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5296DB0914E977C20044BD53 /* JTTableViewGestureRecognizer.m */; };
-		5296DB0D14E977C20044BD53 /* TransformableTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5296DB0B14E977C20044BD53 /* TransformableTableViewCell.m */; };
+		5296DB0D14E977C20044BD53 /* JTTransformableTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5296DB0B14E977C20044BD53 /* JTTransformableTableViewCell.m */; };
 		52B4AC6514EB47AC006574B9 /* UIColor+JTGestureBasedTableViewHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B4AC6414EB47AC006574B9 /* UIColor+JTGestureBasedTableViewHelper.m */; };
 		52D6217D14DF7F1E00400117 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6217C14DF7F1E00400117 /* UIKit.framework */; };
 		52D6217F14DF7F1E00400117 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6217E14DF7F1E00400117 /* Foundation.framework */; };
@@ -38,6 +38,8 @@
 		52D621A814DF7F1E00400117 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52D621A614DF7F1E00400117 /* InfoPlist.strings */; };
 		52D621AB14DF7F1E00400117 /* JTGestureBasedTableViewDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D621AA14DF7F1E00400117 /* JTGestureBasedTableViewDemoTests.m */; };
 		52D621BC14DF86D600400117 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D621BB14DF86D600400117 /* QuartzCore.framework */; };
+		80F9C6E3169854CF00DC2F5C /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 80F9C6E2169854CF00DC2F5C /* Default-568h@2x.png */; };
+		80F9C6E4169854CF00DC2F5C /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 80F9C6E2169854CF00DC2F5C /* Default-568h@2x.png */; };
 		DFC2D1091558A13900348983 /* reload.png in Resources */ = {isa = PBXBuildFile; fileRef = DFC2D1071558A13900348983 /* reload.png */; };
 		DFC2D10A1558A13900348983 /* reload@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFC2D1081558A13900348983 /* reload@2x.png */; };
 /* End PBXBuildFile section */
@@ -64,8 +66,8 @@
 		1AA68A6614FA443D009145F3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPad.storyboard; sourceTree = "<group>"; };
 		5296DB0814E977C20044BD53 /* JTTableViewGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTTableViewGestureRecognizer.h; sourceTree = "<group>"; };
 		5296DB0914E977C20044BD53 /* JTTableViewGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JTTableViewGestureRecognizer.m; sourceTree = "<group>"; };
-		5296DB0A14E977C20044BD53 /* TransformableTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformableTableViewCell.h; sourceTree = "<group>"; };
-		5296DB0B14E977C20044BD53 /* TransformableTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransformableTableViewCell.m; sourceTree = "<group>"; };
+		5296DB0A14E977C20044BD53 /* JTTransformableTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTTransformableTableViewCell.h; sourceTree = "<group>"; };
+		5296DB0B14E977C20044BD53 /* JTTransformableTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JTTransformableTableViewCell.m; sourceTree = "<group>"; };
 		52B4AC6314EB47AC006574B9 /* UIColor+JTGestureBasedTableViewHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+JTGestureBasedTableViewHelper.h"; sourceTree = "<group>"; };
 		52B4AC6414EB47AC006574B9 /* UIColor+JTGestureBasedTableViewHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+JTGestureBasedTableViewHelper.m"; sourceTree = "<group>"; };
 		52D6217814DF7F1E00400117 /* JTGestureBasedTableViewDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JTGestureBasedTableViewDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -89,6 +91,7 @@
 		52D621A914DF7F1E00400117 /* JTGestureBasedTableViewDemoTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JTGestureBasedTableViewDemoTests.h; sourceTree = "<group>"; };
 		52D621AA14DF7F1E00400117 /* JTGestureBasedTableViewDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JTGestureBasedTableViewDemoTests.m; sourceTree = "<group>"; };
 		52D621BB14DF86D600400117 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		80F9C6E2169854CF00DC2F5C /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = SOURCE_ROOT; };
 		DFC2D1071558A13900348983 /* reload.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = reload.png; sourceTree = "<group>"; };
 		DFC2D1081558A13900348983 /* reload@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "reload@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -157,8 +160,8 @@
 			children = (
 				5296DB0814E977C20044BD53 /* JTTableViewGestureRecognizer.h */,
 				5296DB0914E977C20044BD53 /* JTTableViewGestureRecognizer.m */,
-				5296DB0A14E977C20044BD53 /* TransformableTableViewCell.h */,
-				5296DB0B14E977C20044BD53 /* TransformableTableViewCell.m */,
+				5296DB0A14E977C20044BD53 /* JTTransformableTableViewCell.h */,
+				5296DB0B14E977C20044BD53 /* JTTransformableTableViewCell.m */,
 				52B4AC6314EB47AC006574B9 /* UIColor+JTGestureBasedTableViewHelper.h */,
 				52B4AC6414EB47AC006574B9 /* UIColor+JTGestureBasedTableViewHelper.m */,
 			);
@@ -202,6 +205,7 @@
 		52D6218214DF7F1E00400117 /* JTGestureBasedTableViewDemo */ = {
 			isa = PBXGroup;
 			children = (
+				80F9C6E2169854CF00DC2F5C /* Default-568h@2x.png */,
 				52D6218B14DF7F1E00400117 /* AppDelegate.h */,
 				52D6218C14DF7F1E00400117 /* AppDelegate.m */,
 				52D6218E14DF7F1E00400117 /* ViewController.h */,
@@ -344,6 +348,7 @@
 				1AA68A5B14FA443D009145F3 /* InfoPlist.strings in Resources */,
 				1AA68A6414FA443D009145F3 /* MainStoryboard_iPhone.storyboard in Resources */,
 				1AA68A6714FA443D009145F3 /* MainStoryboard_iPad.storyboard in Resources */,
+				80F9C6E4169854CF00DC2F5C /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -356,6 +361,7 @@
 				52D6219614DF7F1E00400117 /* ViewController_iPad.xib in Resources */,
 				DFC2D1091558A13900348983 /* reload.png in Resources */,
 				DFC2D10A1558A13900348983 /* reload@2x.png in Resources */,
+				80F9C6E3169854CF00DC2F5C /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -393,7 +399,7 @@
 				1AA68A5D14FA443D009145F3 /* main.m in Sources */,
 				1AA68A6114FA443D009145F3 /* AppDelegate.m in Sources */,
 				1AA68A7014FA44B9009145F3 /* JTTableViewGestureRecognizer.m in Sources */,
-				1AA68A7114FA44B9009145F3 /* TransformableTableViewCell.m in Sources */,
+				1AA68A7114FA44B9009145F3 /* JTTransformableTableViewCell.m in Sources */,
 				1AA68A7214FA44B9009145F3 /* UIColor+JTGestureBasedTableViewHelper.m in Sources */,
 				1AA68A7514FA4765009145F3 /* ViewController.m in Sources */,
 			);
@@ -407,7 +413,7 @@
 				52D6218D14DF7F1E00400117 /* AppDelegate.m in Sources */,
 				52D6219014DF7F1E00400117 /* ViewController.m in Sources */,
 				5296DB0C14E977C20044BD53 /* JTTableViewGestureRecognizer.m in Sources */,
-				5296DB0D14E977C20044BD53 /* TransformableTableViewCell.m in Sources */,
+				5296DB0D14E977C20044BD53 /* JTTransformableTableViewCell.m in Sources */,
 				52B4AC6514EB47AC006574B9 /* UIColor+JTGestureBasedTableViewHelper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
