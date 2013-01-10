@@ -404,6 +404,12 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
         CGRect  rect = (CGRect){location1, location2.x - location1.x, location2.y - location1.y};
         NSArray *indexPaths = [self.tableView indexPathsForRowsInRect:rect];
 
+        // #16 Crash on pinch fix
+        if ([indexPaths count] < 2) {
+            NSLog(@"Should not begin pinch");
+            return NO;
+        }
+
         NSIndexPath *firstIndexPath = [indexPaths objectAtIndex:0];
         NSIndexPath *lastIndexPath  = [indexPaths lastObject];
         NSInteger    midIndex = ((float)(firstIndexPath.row + lastIndexPath.row) / 2) + 0.5;
