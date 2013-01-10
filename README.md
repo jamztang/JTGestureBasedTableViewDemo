@@ -41,6 +41,9 @@ It only supports few features at the moment.
 - Long hold to reorder cell
 - Pull to return to List (Thanks [SungDong Kim][] for making this happen)
 
+10 Jan 2013 Update:
+- Better pinch animation and iPhone 5 screen support (Big thanks for [Lukas Foldyna][] for refactor and polishing!)
+
 
 How To Use It
 -------------
@@ -143,4 +146,5 @@ This project is under MIT License, please feel free to contribute and use it.
 James
 
 [SungDong Kim]:https://github.com/acroedit
+[Lukas Foldyna]:https://github.com/augard
 
