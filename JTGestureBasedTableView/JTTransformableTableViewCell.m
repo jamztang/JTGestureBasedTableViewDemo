@@ -181,19 +181,26 @@
     self.transformableView.frame = CGRectMake(0.0, contentViewSize.height - self.finishedHeight,
                                               contentViewSize.width, self.finishedHeight);
     
+
+    CGSize requiredLabelSize;
+
     // Since sizeWithFont() method has been depreciated, boundingRectWithSize() method has been used for iOS 7.
-    /* if(floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_6_1)
-     CGSize requiredLabelSize = [self.textLabel.text sizeWithFont:self.textLabel.font
-     constrainedToSize:contentViewSize
-     lineBreakMode:NSLineBreakByClipping];
-     */
-    NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
-    paragraphStyle.lineBreakMode = NSLineBreakByClipping;
-    CGRect requiredLabelRect = [self.textLabel.text boundingRectWithSize:contentViewSize options:NSStringDrawingUsesLineFragmentOrigin
-                                                              attributes:@{NSFontAttributeName:self.textLabel.font,
-                                                                           NSParagraphStyleAttributeName: paragraphStyle}
-                                                                 context:nil];
-    CGSize requiredLabelSize = requiredLabelRect.size;
+    if ([NSString instancesRespondToSelector:@selector(boundingRectWithSize:options:attributes:context:)]) {
+        NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
+        paragraphStyle.lineBreakMode = NSLineBreakByClipping;
+        CGRect requiredLabelRect = [self.textLabel.text boundingRectWithSize:contentViewSize
+                                                                     options:NSStringDrawingUsesLineFragmentOrigin
+                                                                  attributes:@{NSFontAttributeName:self.textLabel.font,
+                                                                               NSParagraphStyleAttributeName: paragraphStyle}
+                                                                     context:nil];
+
+        requiredLabelSize = requiredLabelRect.size;
+    } else {
+        requiredLabelSize = [self.textLabel.text sizeWithFont:self.textLabel.font
+                                            constrainedToSize:contentViewSize
+                                                lineBreakMode:NSLineBreakByClipping];
+    }
+
     self.imageView.frame = CGRectMake(10.0 + requiredLabelSize.width + 10.0,
                                       (self.finishedHeight - self.imageView.frame.size.height)/2,
                                       self.imageView.frame.size.width,
