@@ -148,3 +148,7 @@ James
 [SungDong Kim]:https://github.com/acroedit
 [Lukas Foldyna]:https://github.com/augard
 
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/jamztang/jtgesturebasedtableviewdemo/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
