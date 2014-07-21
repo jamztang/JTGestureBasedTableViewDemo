@@ -59,13 +59,12 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
 
     CGPoint currentOffset = self.tableView.contentOffset;
     CGPoint newOffset = CGPointMake(currentOffset.x, currentOffset.y + self.scrollingRate);
-    if (newOffset.y < 0) {
-        newOffset.y = 0;
+    if (newOffset.y < -self.tableView.contentInset.top) {
+        newOffset.y = -self.tableView.contentInset.top;
     } else if (self.tableView.contentSize.height < self.tableView.frame.size.height) {
         newOffset = currentOffset;
-    } else if (newOffset.y > self.tableView.contentSize.height - self.tableView.frame.size.height) {
-        newOffset.y = self.tableView.contentSize.height - self.tableView.frame.size.height;
-    } else {
+    } else if (newOffset.y > self.tableView.contentSize.height - self.tableView.frame.size.height + self.tableView.contentInset.bottom) {
+        newOffset.y = self.tableView.contentSize.height - self.tableView.frame.size.height + self.tableView.contentInset.bottom;
     }
     [self.tableView setContentOffset:newOffset];
     
