@@ -122,6 +122,8 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
         // We would like to reload other rows as well
         [self.tableView performSelector:@selector(reloadVisibleRowsExceptIndexPath:) withObject:self.addingIndexPath afterDelay:JTTableViewRowAnimationDuration];
         
+        NSIndexPath *indexPath = self.addingIndexPath;
+        
         self.addingIndexPath = nil;
         [self.tableView endUpdates];
         
@@ -132,6 +134,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
         self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
         [UIView commitAnimations];
         
+        [self.delegate gestureRecognizer:self didCommitRowAtIndexPath:indexPath];
     }
     self.state = JTTableViewGestureRecognizerStateNone;
 }
