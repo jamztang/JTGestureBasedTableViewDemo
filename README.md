@@ -11,7 +11,7 @@ Known Issues
 ------------
 
 It has been developed under iOS 4.3 and 5.0 devices, sample code has been built using ARC (not quite properly). I am still studying to have a proper refactor on my code for a real ARC adoption. 
-There's currently one known issues related to running on non-arc enviornment (e.g. refs #4). Please use `-fobjc-arc` per source file complier flag for compiling on non-ARC enviroment.
+There's currently one known issues related to running on non-arc environment (e.g. refs #4). Please use `-fobjc-arc` per source file compiler flag for compiling on non-ARC environment.
 
 
 Abstract
